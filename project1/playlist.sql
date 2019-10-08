@@ -11,6 +11,7 @@ CREATE TABLE tracks (
     url_album_chart TEXT NULL
 
 );
+DROP TABLE IF EXISTS playlist;
 
 CREATE TABLE playlist(
 
@@ -22,6 +23,8 @@ CREATE TABLE playlist(
 
 );
 
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users(
 
     username VARCHAR NOT NULL PRIMARY KEY, 
@@ -30,6 +33,8 @@ CREATE TABLE users(
     url_homepage TEXT NULL,
     UNIQUE(username, disp_name)
 );
+
+DROP TABLE IF EXISTS microservice;
 
 CREATE TABLE microservice (
 
