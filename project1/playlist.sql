@@ -4,6 +4,7 @@ PRAGMA foreign_keys = OFF;
 BEGIN TRANSACTION;
 DROP TABLE IF EXISTS tracks;
 CREATE TABLE tracks (
+    id INTEGER primary key,
     title VARCHAR NOT NULL,
     album_title VARCHAR NOT NULL,
     time_len FLOAT NOT NULL,
@@ -14,10 +15,10 @@ CREATE TABLE tracks (
 DROP TABLE IF EXISTS playlist;
 
 CREATE TABLE playlist(
-
+    id INTEGER primary key,
     title VARCHAR NOT NULL,
     url_ind_tracks BLOB NOT NULL,
-    username VARCHAR NOT NULL PRIMARY KEY,
+    username VARCHAR NOT NULL ,
     descript TEXT NULL,
     UNIQUE(username)
 
@@ -26,8 +27,8 @@ CREATE TABLE playlist(
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users(
-
-    username VARCHAR NOT NULL PRIMARY KEY, 
+    id INTEGER primary key,
+    username VARCHAR NOT NULL , 
     user_pass VARCHAR NOT NULL,
     disp_name VARCHAR NOT NULL ,
     url_homepage TEXT NULL,
@@ -37,7 +38,7 @@ CREATE TABLE users(
 DROP TABLE IF EXISTS microservice;
 
 CREATE TABLE microservice (
-
+    id INTEGER primary key,
     user_description TEXT NULL,
     retrive_descipttion TEXT NULL
     
