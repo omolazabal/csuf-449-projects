@@ -17,11 +17,9 @@ DROP TABLE IF EXISTS playlist;
 CREATE TABLE playlist(
     id INTEGER primary key,
     title VARCHAR NOT NULL,
-    url_ind_tracks BLOB NOT NULL,
+    url_ind_tracks TEXT NOT NULL,
     username VARCHAR NOT NULL ,
-    descript TEXT NULL,
-    UNIQUE(username)
-
+    descript TEXT NULL
 );
 
 DROP TABLE IF EXISTS users;
@@ -45,3 +43,11 @@ CREATE TABLE microservice (
 
 
 );
+
+INSERT INTO tracks(title,album_title,time_len,url_media_file) VALUES("Parinod","Beerpng and Bentleys",2.23,"http://thisisawebsite.com");
+INSERT INTO tracks(title,album_title,time_len,url_media_file) VALUES("Zack and Codine","Beerpng and Bentleys",2.55,"http://thisisawebsite2.com");
+INSERT INTO playlist(title,url_ind_tracks,username) VALUES("Parinoid", "http://thisisawebsite.com","username1");
+INSERT INTO playlist(title,url_ind_tracks,username) VALUES("Zack and Codine", "http://thisisawebsite.com2","username1");
+INSERT INTO users(username,user_pass,disp_name,url_homepage) VALUES("username1","Password","username1","http://thisisaurl.com");
+
+COMMIT;
