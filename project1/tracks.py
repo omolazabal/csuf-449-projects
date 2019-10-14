@@ -19,7 +19,7 @@ def init_db():
         db.commit()
 
 @app.route('/tracks/<int:id>', methods=['GET'])
-def get_track():
+def get_track(id):
     track = queries.track_by_id(id=id)
     if track:
         return track
