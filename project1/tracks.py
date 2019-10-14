@@ -26,5 +26,20 @@ def track(id):
     else:
         raise exceptions.NotFound()
 
+@app.route('/tracks', methods=['GET', 'POST'])
+def tracks():
+    if request.method == 'POST':
+        return insert_track(request.data)
+
+def insert_track(track):
+    required_fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
+    if not all([field in track for field in required_fields]):
+        raise exceptions.ParseError()
+    try:
+        track['id'] = queries.create_track(**track)
+    except Exception as e:
+        return { 'error': str(e) }, status.HTTP_409_CONFLICT
+
+    return track, status.HTTP_201_CREATED
 
 app.run()
