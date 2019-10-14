@@ -34,7 +34,7 @@ CREATE TABLE users(
     UNIQUE(username, disp_name)
 );
 
-DROP TABLE IF EXISTS microservice;
+DROP TABLE IF EXISTS description;
 
 CREATE TABLE microservice (
     id INTEGER primary key,
