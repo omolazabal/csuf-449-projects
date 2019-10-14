@@ -7,6 +7,9 @@ import pugsql
 app = flask_api.FlaskAPI(__name__)
 app.config.from_envvar('APP_CONFIG')
 
+queries = pugsql.module('queries/')
+queries.connect(app.config['DATABASE_URL'])
+
 @app.cli.command('init')
 def init_db():
     with app.app_context():
@@ -15,16 +18,13 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
-def get_db():
-    pass
+@app.route('/tracks/<int:id>', methods=['GET'])
+def get_track():
+    track = queries.track_by_id(id=id)
+    if track:
+        return track
+    else:
+        raise exceptions.NotFound()
 
-def create_track():
-    pass
-
-def delete_track():
-    pass
-
-def edit_track():
-    pass
 
 app.run()
