@@ -10,13 +10,6 @@ app.config.from_envvar('APP_CONFIG')
 queries = pugsql.module('queries/')
 queries.connect(app.config['DATABASE_URL'])
 
-@app.cli.command('init')
-def init_db():
-    with app.app_context():
-        db = queries._engine.raw_connection()
-        with app.open_resource('music.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
 
 @app.route('/tracks/<int:id>', methods=['GET'])
 def track(id):
@@ -26,10 +19,12 @@ def track(id):
     else:
         raise exceptions.NotFound()
 
-@app.route('/tracks', methods=['GET', 'POST'])
+@app.route('/tracks', methods=['PUT', 'POST'])
 def tracks():
     if request.method == 'POST':
         return insert_track(request.data)
+    elif request.method == 'PUT':
+        return None
 
 def insert_track(track):
     required_fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
@@ -42,4 +37,5 @@ def insert_track(track):
 
     return track, status.HTTP_201_CREATED
 
-app.run()
+if __name__ == "__main__":
+    app.run()

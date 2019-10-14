@@ -1,1 +1,1 @@
-api: flask run -p $PORT
+FLASK_APP=tracks.py flask run --port 5000
