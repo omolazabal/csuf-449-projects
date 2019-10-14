@@ -6,5 +6,31 @@ curl --verbose \
      --header "Content-type: application/json" \
      --request POST \
      --data @data/sample_track.json \
-     http://localhost:5000/tracks
+     http://localhost:5000/Tracks
 
+curl --verbose \
+     --header "content-type:application/json" \
+     --requeest GET\
+     --data @data/sample_track.json\
+     http://localhost:5001/User
+
+
+
+curl --verbose \
+     --header "content-type:application/json" \
+     --requeest DELETE\
+     --data @data/sample_track.json\
+     http://localhost:5002/Playlist
+
+
+
+curl --verbose \
+     --header "content-type:application/json" \
+     --requeest PUT\
+     --data @data/sample_track.json\
+     http://localhost:5003/Descriptons
+
+
+
+
+# we need to make seperate jaon files for every sample look in the data directory nd we will find what to do basically its a quick 5 minute thing
