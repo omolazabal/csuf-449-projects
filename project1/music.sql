@@ -50,5 +50,6 @@ INSERT INTO tracks(title,album_title,time_len,url_media_file) VALUES("Zack and C
 INSERT INTO playlist(title,url_ind_tracks,username) VALUES("Parinoid", "http://thisisawebsite.com","username1");
 INSERT INTO playlist(title,url_ind_tracks,username) VALUES("Zack and Codine", "http://thisisawebsite.com2","username1");
 INSERT INTO users(username,user_pass,disp_name,url_homepage) VALUES("username1","Password","username1","http://thisisaurl.com");
+INSERT INTO description(user_description) VALUES ("THis is a description");
 
 COMMIT;
