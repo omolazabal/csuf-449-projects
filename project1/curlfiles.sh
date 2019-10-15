@@ -3,24 +3,47 @@
 curl --verbose \
      --header "Content-type: application/json" \
      --request POST \
-     --data @data/sample_track.json \
+     --data @data/track.json \
      http://localhost:5000/tracks
 
 curl --verbose \
      --header "Content-type: application/json" \
-     --request DELETE \
-     http://localhost:5000/tracks/1
-
-     curl --verbose \
-     --header "Content-type: application/json" \
-     --request PUT \
-     --data @data/sample_track.json \
+     --request PATCH \
+     --data @data/track_edit.json \
      http://localhost:5000/tracks/3
 
 curl --verbose \
      --header "Content-type: application/json" \
      --request GET \
      http://localhost:5000/tracks/3
+
+curl --verbose \
+     --header "Content-type: application/json" \
+     --request DELETE \
+     http://localhost:5000/tracks/3
+
+# Playlists
+curl --verbose \
+     --header "Content-type: application/json" \
+     --request POST \
+     --data @data/sample_playlist.json \
+     http://localhost:5002/playlists
+
+curl --verbose \
+     --header "Content-type: application/json" \
+     --request DELETE \
+     http://localhost:5002/playlists/3
+
+     curl --verbose \
+     --header "Content-type: application/json" \
+     --request PUT \
+     --data @data/sample_playlist.json \
+     http://localhost:5002/playlists
+
+curl --verbose \
+     --header "Content-type: application/json" \
+     --request GET \
+     http://localhost:5002/playlists/3
 
 
 # Users
@@ -45,30 +68,6 @@ curl --verbose \
      --header "Content-type: application/json" \
      --request GET \
      http://localhost:5001/users/3
-
-
-# Playlists
-curl --verbose \
-     --header "Content-type: application/json" \
-     --request POST \
-     --data @data/sample_playlist.json \
-     http://localhost:5002/playlists
-
-curl --verbose \
-     --header "Content-type: application/json" \
-     --request DELETE \
-     http://localhost:5002/playlists/3
-
-     curl --verbose \
-     --header "Content-type: application/json" \
-     --request PUT \
-     --data @data/sample_playlist.json \
-     http://localhost:5002/playlists
-
-curl --verbose \
-     --header "Content-type: application/json" \
-     --request GET \
-     http://localhost:5002/playlists/3
 
 
 # Descriptions
