@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users(
     id INTEGER primary key,
     username VARCHAR NOT NULL , 
+    email VARCHAR NOT NULL, 
     user_pass VARCHAR NOT NULL,
     disp_name VARCHAR NOT NULL ,
     url_homepage TEXT NULL,
@@ -39,8 +40,7 @@ DROP TABLE IF EXISTS description;
 CREATE TABLE description (
     id INTEGER primary key,
     user_description TEXT NULL,
-    retrive_descipttion TEXT NULL
-    
+ 
 
 
 );

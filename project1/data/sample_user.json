@@ -1,5 +1,6 @@
 {
     "username": "username123",
+    "email": "thisisaemail@email.com",
     "user_pass": "Password",
     "disp_name": "disp_name1",
     "url_hompage": "www.thisisawebsite.com"
