@@ -10,7 +10,6 @@ app.config.from_envvar('APP_CONFIG')
 queries = pugsql.module('queries/')
 queries.connect(app.config['DATABASE_URL'])
 
-
 @app.route('/tracks/<int:id>', methods=['GET', 'DELETE', 'PATCH'])
 def track(id):
     if request.method == 'GET':
@@ -34,7 +33,7 @@ def get_track(id):
 def insert_track(track):
     # POST
     response = jsonify()
-    required_fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
+    required_fields = ['track_title', 'album_title', 'time_length', 'media_file_url', 'album_art_url']
     if not all([field in track for field in required_fields]):
         raise exceptions.ParseError()
     try:
@@ -57,7 +56,7 @@ def delete_track(id):
 
 def update_track(id, track):
     # PATCH
-    fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
+    fields = ['track_title', 'album_title', 'time_length', 'media_file_url', 'album_chart_url']
     for field in track.keys():
         if field not in fields:
             return { 'error': f'key {field} does not exist' }, status.HTTP_404_NOT_FOUND
