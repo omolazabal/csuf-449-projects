@@ -36,7 +36,7 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS description;
 
-CREATE TABLE microservice (
+CREATE TABLE description (
     id INTEGER primary key,
     user_description TEXT NULL,
     retrive_descipttion TEXT NULL
