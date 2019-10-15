@@ -11,23 +11,25 @@ queries = pugsql.module('queries/')
 queries.connect(app.config['DATABASE_URL'])
 
 
-@app.route('/tracks/<int:id>', methods=['GET', 'DELETE'])
+@app.route('/tracks/<int:id>', methods=['GET', 'DELETE', 'PATCH'])
 def track(id):
-    track = queries.track_by_id(id=id)
     if request.method == 'GET':
-        if track:
-            return track
-        else:
-            raise exceptions.NotFound()
+        return get_track(id)
     elif request.method == 'DELETE':
         return delete_track(id)
+    elif request.method == 'PATCH':
+        return update_track(id, request.data)
 
-@app.route('/tracks', methods=['POST', 'PATCH'])
+@app.route('/tracks', methods=['POST'])
 def tracks():
-    if request.method == 'POST':
-        return insert_track(request.data)
-    # elif request.method == 'PATCH':
-    #     return update_track(request.args)
+    return insert_track(request.data)
+
+def get_track(id):
+    track = queries.track_by_id(id=id)
+    if track:
+        return track
+    else:
+        raise exceptions.NotFound()
 
 def insert_track(track):
     required_fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
@@ -48,13 +50,21 @@ def delete_track(id):
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_409_CONFLICT
 
-# def update_track(query_parameters):
-#     _id = query_parameters.get('id')
-#     title = query_parameters.get('title')
-#     album_title = query_parameters.get('album_title')
-#     time_len = query_parameters.get('time_len')
-#     url_media_file = query_parameters.get('url_media_file')
-#     url_album_chart = query_parameters.get('url_album_chart')
+def update_track(id, track):
+    fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
+    for field in track.keys():
+        if field not in fields:
+            raise exceptions.ParseError()
+    updates = []
+    query = 'UPDATE tracks SET'
+    for key, value in track.items():
+        query += f' {key}=?,'
+        updates.append(value)
+    query = query[:-1] + ' WHERE id = ?;'
+    updates.append(id)
+    queries._engine.execute(query, updates)
+    track = get_track(id)
+    return track, status.HTTP_200_OK
 
 if __name__ == "__main__":
     app.run()
