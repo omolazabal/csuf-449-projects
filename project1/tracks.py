@@ -11,20 +11,21 @@ queries = pugsql.module('queries/')
 queries.connect(app.config['DATABASE_URL'])
 
 
-@app.route('/tracks/<int:id>', methods=['GET'])
+@app.route('/tracks/<int:id>', methods=['GET', 'DELETE'])
 def track(id):
     track = queries.track_by_id(id=id)
-    if track:
-        return track
-    else:
-        raise exceptions.NotFound()
+    if request.method == 'GET':
+        if track:
+            return track
+        else:
+            raise exceptions.NotFound()
+    elif request.method == 'DELETE':
+        return delete_track(id)
 
-@app.route('/tracks', methods=['POST', 'PATCH', 'DELETE'])
+@app.route('/tracks', methods=['POST', 'PATCH'])
 def tracks():
     if request.method == 'POST':
         return insert_track(request.data)
-    elif request.method == 'DELETE':
-        return delete_track(request.args)
     # elif request.method == 'PATCH':
     #     return update_track(request.args)
 
@@ -38,15 +39,14 @@ def insert_track(track):
         return { 'error': str(e) }, status.HTTP_409_CONFLICT
     return track, status.HTTP_201_CREATED
 
-def delete_track(query_parameters):
-    id = query_parameters.get('id')
+def delete_track(id):
     if not id:
         raise exceptions.ParseError()
     try:
-        if = queries.delete_track(id)
+        queries.delete_track(id=id)
+        return { 'message': f'Deleted 1 track with id {id}' }, status.HTTP_200_OK
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_409_CONFLICT
-    return { 'success': f'track {id} deleted' }, status.HTTP_201_CREATED
 
 # def update_track(query_parameters):
 #     _id = query_parameters.get('id')
