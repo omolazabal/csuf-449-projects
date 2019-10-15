@@ -1,25 +1,34 @@
 -- $ sqlite3 music.db < sqlite.sql
 
-PRAGMA foreign_keys = OFF;
+PRAGMA foreign_keys = ON;
 BEGIN TRANSACTION;
 
 DROP TABLE IF EXISTS tracks;
 CREATE TABLE tracks (
-    id INTEGER primary key,
-    title VARCHAR NOT NULL,
+    id INTEGER PRIMARY KEY,
+    track_title VARCHAR NOT NULL,
     album_title VARCHAR NOT NULL,
-    time_len FLOAT NOT NULL,
-    url_media_file TEXT NOT NULL,
-    url_album_chart TEXT NULL
+    artist VARCHAR NOT NULL,
+    track_length FLOAT NOT NULL,
+    media_file_url TEXT NOT NULL,
+    album_art_url TEXT NULL
 );
 
-DROP TABLE IF EXISTS playlist;
-CREATE TABLE playlist(
-    id INTEGER primary key,
+DROP TABLE IF EXISTS playlists;
+CREATE TABLE playlists(
+    id INTEGER PRIMARY KEY,
     title VARCHAR NOT NULL,
-    url_ind_tracks TEXT NOT NULL,
-    username VARCHAR NOT NULL ,
-    descript TEXT NULL
+    creator VARCHAR NOT NULL, 
+    description TEXT NULL,
+    FOREIGN KEY(creator) REFERENCES users(username)
+);
+
+DROP TABLE IF EXISTS playlist_tracks;
+CREATE TABLE playlist_tracks(
+    playlist_id INTEGER NOT NULL,
+    track_id INTEGER NOT NULL,
+    FOREIGN KEY(playlist_id) REFERENCES playlists(id),
+    FOREIGN KEY(track_id) REFERENCES tracks(id)
 );
 
 DROP TABLE IF EXISTS users;
@@ -39,8 +48,8 @@ CREATE TABLE descriptions (
     user_description TEXT NULL
 );
 
-INSERT INTO tracks(title,album_title,time_len,url_media_file) VALUES("Parinod","Beerpng and Bentleys",2.23,"http://thisisawebsite.com");
-INSERT INTO tracks(title,album_title,time_len,url_media_file) VALUES("Zack and Codine","Beerpng and Bentleys",2.55,"http://thisisawebsite2.com");
+INSERT INTO tracks(track_title, album_title, artist, track_length, media_file_url, album_art_url) VALUES("Track Title 1", "Album Title 1", "Artist 1", 2.3, "mediafileurl", "albumarturl");
+INSERT INTO tracks(track_title, album_title, artist, track_length, media_file_url, album_art_url) VALUES("Track Title 2", "Album Title 2", "Artist 2", 3.3, "mediafileurl", "albumarturl");
 INSERT INTO playlist(title,url_ind_tracks,username) VALUES("Parinoid", "http://thisisawebsite.com","username1");
 INSERT INTO playlist(title,url_ind_tracks,username) VALUES("Zack and Codine", "http://thisisawebsite.com2","username1");
 INSERT INTO users(username,user_pass,disp_name,email,url_homepage) VALUES("username1","Password","username1","myemail@gmail.com","http://thisisaurl.com");
