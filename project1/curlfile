@@ -20,20 +20,20 @@ curl --verbose \
      --data @data/tracks/track3.json \
      http://localhost:5000/tracks
 
-echo 'Update track'
+echo '\nUpdate track\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request PATCH \
      --data @data/tracks/track_edit.json \
      http://localhost:5000/tracks/3
 
-echo 'Get track'
+echo '\nGet track\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request GET \
      http://localhost:5000/tracks/3
 
-echo 'Delete track'
+echo '\nDelete track\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request DELETE \
@@ -47,40 +47,37 @@ curl --verbose \
      --data @data/playlists/playlist1.json \
      http://localhost:5001/playlists
 
-echo '\nNew playlists\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request POST \
      --data @data/playlists/playlist2.json \
      http://localhost:5001/playlists
 
-echo '\nNew playlists\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request POST \
      --data @data/playlists/playlist3.json \
      http://localhost:5001/playlists
 
-echo 'Get playlist'
+echo '\nGet playlist\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request GET \
      http://localhost:5000/playlists/2
 
-echo 'List all playlists'
-echo 'Get playlist'
+echo '\nList all playlists\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request GET \
      http://localhost:5000/playlists/all
 
-echo 'List all playlists by user'
+echo '\nList all playlists by user\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request GET \
      http://localhost:5000/playlists?creator=username2
 
-echo 'Delete playlist'
+echo '\nDelete playlist\n'
 curl --verbose \
      --header "Content-type: application/json" \
      --request DELETE \
