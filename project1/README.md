@@ -24,6 +24,33 @@ To test the application you can use the provided `curlfile` executable.
 ./curlfile
 ```
 The executable creates, retrieves, updates, and deletes from the database using the endpoints of the application
+#### Flask Output
+```
+15:53:56 tracks.1       | 127.0.0.1 - - [16/Oct/2019 15:53:56] "POST /tracks HTTP/1.1" 201 -
+15:53:56 tracks.1       | 127.0.0.1 - - [16/Oct/2019 15:53:56] "POST /tracks HTTP/1.1" 201 -
+15:53:56 tracks.1       | 127.0.0.1 - - [16/Oct/2019 15:53:56] "POST /tracks HTTP/1.1" 201 -
+15:53:56 tracks.1       | 127.0.0.1 - - [16/Oct/2019 15:53:56] "PATCH /tracks/3 HTTP/1.1" 200 -
+15:53:56 tracks.1       | 127.0.0.1 - - [16/Oct/2019 15:53:56] "GET /tracks/3 HTTP/1.1" 200 -
+15:53:56 tracks.1       | 127.0.0.1 - - [16/Oct/2019 15:53:56] "DELETE /tracks/3 HTTP/1.1" 200 -
+15:53:56 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:56] "POST /users HTTP/1.1" 201 -
+15:53:56 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:56] "POST /users HTTP/1.1" 201 -
+15:53:57 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:57] "POST /users HTTP/1.1" 201 -
+15:53:57 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:57] "GET /users/username1 HTTP/1.1" 200 -
+15:53:57 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:57] "GET /users/username2 HTTP/1.1" 200 -
+15:53:57 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:57] "DELETE /users/username3 HTTP/1.1" 200 -
+15:53:57 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:57] "PATCH /users/username1 HTTP/1.1" 200 -
+15:53:57 users.1        | 127.0.0.1 - - [16/Oct/2019 15:53:57] "GET /users/authenticate HTTP/1.1" 200 -
+15:53:57 playlist.1     | 127.0.0.1 - - [16/Oct/2019 15:53:57] "POST /playlists HTTP/1.1" 201 -
+15:53:57 playlist.1     | 127.0.0.1 - - [16/Oct/2019 15:53:57] "POST /playlists HTTP/1.1" 201 -
+15:53:57 playlist.1     | 127.0.0.1 - - [16/Oct/2019 15:53:57] "POST /playlists HTTP/1.1" 201 -
+15:53:57 playlist.1     | 127.0.0.1 - - [16/Oct/2019 15:53:57] "GET /playlists/2 HTTP/1.1" 200 -
+15:53:57 playlist.1     | 127.0.0.1 - - [16/Oct/2019 15:53:57] "GET /playlists/all HTTP/1.1" 200 -
+15:53:57 playlist.1     | 127.0.0.1 - - [16/Oct/2019 15:53:57] "GET /playlists?creator=username2 HTTP/1.1" 200 -
+15:53:57 playlist.1     | 127.0.0.1 - - [16/Oct/2019 15:53:57] "DELETE /playlists/3 HTTP/1.1" 200 -
+15:53:57 descriptions.1 | 127.0.0.1 - - [16/Oct/2019 15:53:57] "POST /descriptions HTTP/1.1" 201 -
+15:53:57 descriptions.1 | 127.0.0.1 - - [16/Oct/2019 15:53:57] "POST /descriptions HTTP/1.1" 201 -
+15:53:57 descriptions.1 | 127.0.0.1 - - [16/Oct/2019 15:53:57] "GET /descriptions/1 HTTP/1.1" 200 -
+```
 
 ## Endpoints
 ### Tracks `PORT 5002`
