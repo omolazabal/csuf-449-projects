@@ -1,7 +1,8 @@
 {
-    "title": "this is a title2",
-    "album_title": "this ia an album2",
-    "time_len": 4.59,
-    "url_media_file": "This is a media file2",
-    "url_album_chart": "78"
+    "track_title": "new track",
+    "album_title": "new album",
+    "artist": "new artist",
+    "track_length": 2.1,
+    "media_file_url": "file:///home/student/Music/mediafile3",
+    "album_art_url": "file:///home/student/Music/albumart3"
 }

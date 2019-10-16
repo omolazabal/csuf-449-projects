@@ -33,16 +33,19 @@ def get_track(id):
 def insert_track(track):
     # POST
     response = jsonify()
-    required_fields = ['track_title', 'album_title', 'time_length', 'media_file_url', 'album_art_url']
+    required_fields = ['track_title', 'album_title', 'artist', 'track_length', 'media_file_url', 'album_art_url']
     if not all([field in track for field in required_fields]):
-        raise exceptions.ParseError()
-    try:
-        track['id'] = queries.create_track(**track)
-        response = jsonify(track)
-        response.headers['location'] = f'/tracks/{track["id"]}'
-        response.status_code = 201
-    except Exception as e:
+        response = jsonify(error="invalid fields")
         response.status_code = 409
+    else:
+        try:
+            track['id'] = queries.create_track(**track)
+            response = jsonify(track)
+            response.headers['location'] = f'/tracks/{track["id"]}'
+            response.status_code = 201
+        except Exception as e:
+            response = jsonify(error=str(e))
+            response.status_code = 409
     return response
 
 def delete_track(id):
@@ -57,10 +60,12 @@ def delete_track(id):
 
 def update_track(id, track):
     # PATCH
-    fields = ['track_title', 'album_title', 'time_length', 'media_file_url', 'album_chart_url']
+    if len(track) == 0:
+            return { 'error': f'key not specified' }, status.HTTP_404_NOT_FOUND
+    fields = ['track_title', 'album_title', 'artist', 'track_length', 'media_file_url', 'album_art_url']
     for field in track.keys():
         if field not in fields:
-            return { 'error': f'key {field} does not exist' }, status.HTTP_404_NOT_FOUND
+            return { 'invalid key': f'{field}' }, status.HTTP_404_NOT_FOUND
     updates = []
     query = 'UPDATE tracks SET'
     for key, value in track.items():

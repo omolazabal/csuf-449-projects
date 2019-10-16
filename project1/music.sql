@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS playlist_tracks;
 CREATE TABLE playlist_tracks(
     playlist_id INTEGER NOT NULL,
     media_file_url TEXT NOT NULL,
-    FOREIGN KEY(playlist_id) REFERENCES playlists(id),
+    FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE,
     FOREIGN KEY(media_file_url) REFERENCES tracks(media_file_url),
     PRIMARY KEY(playlist_id, media_file_url)
 );
@@ -53,12 +53,14 @@ CREATE TABLE descriptions (
 );
 
 INSERT INTO tracks(track_title, album_title, artist, track_length, media_file_url, album_art_url)
-    VALUES("Track Title 1", "Album Title 1", "Artist 1", 2.3, "mediafileurl1", "albumarturl1");
+    VALUES("Track Title 1", "Album Title 1", "Artist 1", 2.3, "file:///home/student/Music/media_file1", "file:///home/student/Music/album_art1");
 INSERT INTO tracks(track_title, album_title, artist, track_length, media_file_url, album_art_url)
-    VALUES("Track Title 2", "Album Title 2", "Artist 2", 3.3, "mediafileurl2", "albumarturl2");
+    VALUES("Track Title 2", "Album Title 2", "Artist 2", 3.3, "file:///home/student/Music/media_file2", "file:///home/student/Music/album_art2");
 
 INSERT INTO users(username, user_pass, disp_name, email, url_homepage)
     VALUES("username1", "Password", "username1", "myemail@gmail.com", "http://thisisaurl.com");
+INSERT INTO users(username, user_pass, disp_name, email, url_homepage)
+    VALUES("username2", "Password", "username2", "myemail@gmail.com", "http://thisisaurl.com");
 
 INSERT INTO descriptions(user_description)
     VALUES("This is a description");
@@ -67,6 +69,11 @@ INSERT INTO playlists(title, creator, description)
     VALUES("playlist1", "username1", "description1");
 INSERT INTO playlists(title, creator, description)
     VALUES("playlist2", "username1", "description2");
+
+INSERT INTO playlist_tracks(playlist_id, media_file_url)
+    VALUES(1, "file:///home/student/Music/media_file1");
+INSERT INTO playlist_tracks(playlist_id, media_file_url)
+    VALUES(1, "file:///home/student/Music/media_file2");
 
 COMMIT;
 
