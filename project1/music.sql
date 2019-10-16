@@ -42,7 +42,7 @@ CREATE TABLE playlist_tracks(
     playlist_id INTEGER NOT NULL,
     media_file_url TEXT NOT NULL,
     FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE,
-    FOREIGN KEY(media_file_url) REFERENCES tracks(media_file_url),
+    FOREIGN KEY(media_file_url) REFERENCES tracks(media_file_url) ON DELETE CASCADE,
     PRIMARY KEY(playlist_id, media_file_url)
 );
 
