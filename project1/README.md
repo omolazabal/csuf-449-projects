@@ -26,7 +26,7 @@ To test the application you can use the provided `curlfile` executable.
 The executable creates, retrieves, updates, and deletes from the database using the endpoints of the application
 
 ## Endpoints
-### Tracks
+### Tracks `PORT 5002`
 - `/tracks/<int:id>`
     - `GET` Retrieves a track given its ID
     - `DELETE` Deletes a track given its ID
@@ -34,7 +34,7 @@ The executable creates, retrieves, updates, and deletes from the database using 
 - `/tracks`
     - `POST` Inserts a track given the JSON data of a new track
 
-### Playlists
+### Playlists `PORT 5001`
 - `/playlists/<int:id>`
     - `GET` Retrieves a playlist given its ID
     - `DELETE` Deletes a playlist given its ID
@@ -43,6 +43,20 @@ The executable creates, retrieves, updates, and deletes from the database using 
     - `POST` Inserts a playlist given the JSON data of a new playlist
 - `/playlists/all`
     - `GET` Retrieves all playlists
+
+### Users `PORT 5002`
+- `/users/<username>`
+    - `GET` Retrieves user's profile (does not include password) given their username
+    - `PATCH` Updates a user's password, given an updated password in JSON format
+    - `DELETE` Deletes a user given their username
+- `/users`
+    - `POST` Inserts a new user given their data in JSON format
+
+### Descriptions `PORT 5003`
+- `/descriptions/<int:id>`
+    - `GET` Retrieves user descriptions given the ID of a track
+- `/descriptions`
+    - `POST` Inserts a user description of a track given a username, a track id, and a description
 
 ## Data Structure
 Below are sample JSONs of the entities.
@@ -57,7 +71,6 @@ Below are sample JSONs of the entities.
     "media_file_url": "file:///home/student/Music/mediafile1",
     "album_art_url": "file:///home/student/Music/albumart1"
 }
-
 ```
 ### Playlists
 ```
@@ -69,5 +82,23 @@ Below are sample JSONs of the entities.
         "file:///home/student/Music/media_file2"
     ],
     "description": "Description of playlist"
+}
+```
+### Users
+```
+{
+    "username" : "User name",
+    "user_pass" : "Password of user",
+    "disp_name" : "Display name",
+    "email" : "useremail@email.com",
+    "url_homepage" : "http://userhomepage.com"
+}
+```
+### Descriptions
+```
+{
+    "track_id": 1,
+    "user_name": "User name",
+    "description": "This is a track description"
 }
 ```
