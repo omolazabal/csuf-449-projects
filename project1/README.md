@@ -30,9 +30,9 @@ The executable creates, retrieves, updates, and deletes from the database using 
 - `/tracks/<int:id>`
     - `GET` Retrieves a track given its ID
     - `DELETE` Deletes a track given its ID
-    - `PATCH` Updates a track given its ID
+    - `PATCH` Updates a track given its ID and the JSON data of the fields to be modified
 - `/tracks`
-    - `POST` Inserts a track given the JSON of a new track
+    - `POST` Inserts a track given the JSON data of a new track
 
 ### Playlists
 - `/playlists/<int:id>`
@@ -40,7 +40,7 @@ The executable creates, retrieves, updates, and deletes from the database using 
     - `DELETE` Deletes a playlist given its ID
 - `/playlists`
     - `GET` Retrieves a playlist of a user given the argument `creator=`
-    - `POST` Inserts a playlist given the JSON of a new playlist
+    - `POST` Inserts a playlist given the JSON data of a new playlist
 - `/playlists/all`
     - `GET` Retrieves all playlists
 
