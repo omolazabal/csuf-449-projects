@@ -52,7 +52,7 @@ def users():
 def create_user(user):
 	required_fields = ['username', 'user_pass', 'disp_name', 'email', 'url_homepage']
 	if not all([field in user for field in required_fields]):
-		raise exception.ParseError()
+		raise exceptions.ParseError()
 	try:
 		user['user_pass'] = werkzeug.security.generate_password_hash(user['user_pass'], method='pbkdf2:sha256', salt_length=8)
 		user['id'] = queries.create_user(**user)
@@ -68,16 +68,16 @@ def update_user(username, password):
 			return { 'error': f'key {field} does not exist' }, status.HTTP_404_NOT_FOUND
 	updates = []
 	query = 'UPDATE users SET'
-	print(password.items())
+	# print(password.items())
 	for key, value in password.items():
 		query += f' {key}=?,'
 		updates.append(werkzeug.security.generate_password_hash(value, method='pbkdf2:sha256', salt_length=8))
 	query = query[:-1] + ' WHERE username = ?;'
-	print(updates)
+	# print(updates)
 	updates.append(username)
 	try:
-		print("query: ",query)
-		print("updates: ",updates)
+		# print("query: ",query)
+		# print("updates: ",updates)
 		queries._engine.execute(query, updates)
 	except Exception as e:
 		return { 'error': str(e) }, status.HTTP_404_NOT_FOUND

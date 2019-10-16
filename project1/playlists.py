@@ -69,12 +69,13 @@ def insert_playlist(playlist):
         for url in track_urls:
             with queries.transaction():
                 queries.enable_foreign_keys()
-                num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], media_file_url=track_urls)
+                num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], media_file_url=url)
         playlist['tracks'] = track_urls
         response = jsonify(playlist)
         response.headers['location'] = f'/playlists/{playlist["id"]}'
         response.status_code = 201
     except Exception as e:
+        response = jsonify(error=str(e))
         response.status_code = 409
     return response
 

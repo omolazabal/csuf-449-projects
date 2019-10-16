@@ -10,7 +10,7 @@ queries = pugsql.module('queries/')
 queries.connect(app.config['DATABASE_URL'])
 
 
-@app.route('/description/<int:id>', methods=['GET'])
+@app.route('/descriptions/<int:id>', methods=['GET'])
 def description(id):
 	description = queries.description_by_track_id(id=id)
 	if description:
@@ -18,13 +18,13 @@ def description(id):
 	else:
 		raise exceptions.NotFound()
 
-@app.route('/description', methods=['POST'])
+@app.route('/descriptions', methods=['POST'])
 def descriptions():
 	if request.method == 'POST':
 		return insert_description(request.data)
 
 def insert_description(description):
-	required_fields = ['track_id', 'user_username', 'description']
+	required_fields = ['track_id', 'user_name', 'description']
 	if not all([field in description for field in required_fields]):
 		raise exceptions.ParseError()
 	try:
