@@ -48,8 +48,12 @@ CREATE TABLE playlist_tracks(
 
 DROP TABLE IF EXISTS descriptions;
 CREATE TABLE descriptions (
-    id INTEGER primary key,
-    user_description TEXT NULL
+    track_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    description TEXT NOT NULL,
+    FOREIGN KEY(track_id) REFERENCES tracks(id) ON DELETE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY(track_id, user_id)
 );
 
 COMMIT;
