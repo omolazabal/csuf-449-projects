@@ -38,6 +38,7 @@ def insert_track(track):
         raise exceptions.ParseError()
     try:
         track['id'] = queries.create_track(**track)
+        response = jsonify(track)
         response.headers['location'] = f'/tracks/{track["id"]}'
         response.status_code = 201
     except Exception as e:
