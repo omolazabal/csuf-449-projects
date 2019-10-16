@@ -1,8 +1,8 @@
 {
-    "track_title": "new track",
-    "album_title": "new album",
-    "artist": "new artist",
-    "track_length": 2.1,
+    "track_title": "track3",
+    "album_title": "album3",
+    "artist": " artist3",
+    "track_length": 4.1,
     "media_file_url": "file:///home/student/Music/mediafile3",
     "album_art_url": "file:///home/student/Music/albumart3"
 }
