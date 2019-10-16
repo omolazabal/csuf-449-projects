@@ -44,3 +44,30 @@ The executable creates, retrieves, updates, and deletes from the database using 
 - `/playlists/all`
     - `GET` Retrieves all playlists
 
+## Data Structure
+Below are sample JSONs of the entities.
+### Tracks
+```
+{
+    "id" : 1
+    "track_title": "Track Title",
+    "album_title": "Album Title",
+    "artist": "Artist's Name",
+    "track_length": 2.6,
+    "media_file_url": "file:///home/student/Music/mediafile1",
+    "album_art_url": "file:///home/student/Music/albumart1"
+}
+
+```
+### Playlists
+```
+{
+    "title": "Playlist Title",
+    "creator": "Username",
+    "tracks" : [
+        "file:///home/student/Music/media_file1",
+        "file:///home/student/Music/media_file2"
+    ],
+    "description": "Description of playlist"
+}
+```
