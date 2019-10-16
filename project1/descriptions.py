@@ -9,29 +9,28 @@ app.config.from_envvar('APP_CONFIG')
 queries = pugsql.module('queries/')
 queries.connect(app.config['DATABASE_URL'])
 
-@app.route('/', methods=['GET'])
-def hello():
-	return {'hello' : 'world'}
 
 @app.route('/description/<int:id>', methods=['GET'])
 def description(id):
-	description = queries.description_by_id(id=id)
+	description = queries.description_by_track_id(id=id)
 	if description:
 		return description
 	else:
 		raise exceptions.NotFound()
 
-@app.route('/descriptions', methods=['POST'])
+@app.route('/description', methods=['POST'])
 def descriptions():
 	if request.method == 'POST':
 		return insert_description(request.data)
 
 def insert_description(description):
-	required_field = ['user_description']
-	if not all([field in description for field in required_field]):
+	required_fields = ['track_id', 'user_username', 'description']
+	if not all([field in description for field in required_fields]):
 		raise exceptions.ParseError()
 	try:
-		description['id'] = queries.create_description(**description)
+		with queries.transaction():
+			queries.enable_foreign_keys()
+			queries.create_description(**description)
 	except Exception as e:
 		return { 'error' : str(e) }, status.HTTP_409_CONFLICT
 
