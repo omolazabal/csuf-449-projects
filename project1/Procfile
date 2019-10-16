@@ -1,4 +1,2 @@
-Tracks:FLASK_APP=tracks.py flask run --port 5000
-User:FlASK_APP=users.py flask run --port 5001
-Playlist:FLASK_APP=playlist.py flask run --port 5002
-Descriptions:FLASK_APP=descriptions.py flask run --port 5003
+tracks: FLASK_APP=tracks.py flask run --port 5000
+playlist: FLASK_APP=playlists.py flask run --port 5001
