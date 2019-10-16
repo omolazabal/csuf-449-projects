@@ -67,7 +67,9 @@ def insert_playlist(playlist):
         playlist['id'] = queries.create_playlist(**playlist)
         num_tracks = 0
         for url in track_urls:
-            num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], media_file_url=track_urls)
+            with queries.transaction():
+                queries.enable_foreign_keys()
+                num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], media_file_url=track_urls)
         playlist['tracks'] = track_urls
         response = jsonify(playlist)
         response.headers['location'] = f'/playlists/{playlist["id"]}'
