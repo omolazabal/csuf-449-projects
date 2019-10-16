@@ -10,69 +10,82 @@ app.config.from_envvar('APP_CONFIG')
 queries = pugsql.module('queries/')
 queries.connect(app.config['DATABASE_URL'])
 
-
-@app.route('/tracks/<int:id>', methods=['GET', 'DELETE', 'PATCH'])
-def track(id):
+@app.route('/playlists/<int:id>', methods=['GET', 'DELETE'])
+def playlist(id):
     if request.method == 'GET':
-        return get_track(id)
+        return get_playlist(id)
     elif request.method == 'DELETE':
-        return delete_track(id)
-    elif request.method == 'PATCH':
-        return update_track(id, request.data)
+        return delete_playlist(id)
 
-@app.route('/tracks', methods=['POST'])
-def tracks():
-    return insert_track(request.data)
+@app.route('/playlists', methods=['GET', 'POST'])
+def playlists():
+    if request.method == 'POST':
+        return insert_playlist(request.data)
+    elif request.method == 'GET':
+        return get_playlists(request.args)
 
-def get_track(id):
-    # GET
-    track = queries.track_by_id(id=id)
-    if track:
-        return track, status.HTTP_200_OK
-    return { "error" : f"Track with id {id} not found" }, status.HTTP_404_NOT_FOUND
+@app.route('/playlists/all', methods=['GET'])
+def all_playlists():
+    all_playlists = list(queries.all_playlists())
+    for index, playlist in enumerate(all_playlists):
+        tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
+        tracks = [track['media_file_url'] for track in tracks]
+        all_playlists[index]['tracks'] = tracks
+    return all_playlists, status.HTTP_200_OK
 
-def insert_track(track):
-    # POST
+def get_playlists(query_parameters):
+    creator = query_parameters.get('creator')
+    if not creator:
+        return { 'error': 'argument "creator" missing' }, status.HTTP_400_BAD_REQUEST
+    playlists = list(queries.playlist_by_creator(creator=creator))
+    if playlists:
+        for index, playlist in enumerate(playlists):
+            tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
+            tracks = [track['media_file_url'] for track in tracks]
+            playlists[index]['tracks'] = tracks
+        return playlists, status.HTTP_200_OK
+    return { "error" : f"Playlist with creator {creator} not found" }, status.HTTP_404_NOT_FOUND
+        
+
+def get_playlist(id):
+    playlist = queries.playlist_by_id(id=id)
+    if playlist:
+        tracks = list(queries.playlist_tracks_by_id(playlist_id=id))
+        tracks = [track['media_file_url'] for track in tracks]
+        playlist['track'] = tracks
+        return playlist, status.HTTP_200_OK
+    return { "error" : f"Playlist with id {id} not found" }, status.HTTP_404_NOT_FOUND
+
+def insert_playlist(playlist):
     response = jsonify()
-    required_fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
-    if not all([field in track for field in required_fields]):
+    required_fields = ['title', 'creator', 'tracks', 'description']
+    if not all([field in playlist for field in required_fields]):
         raise exceptions.ParseError()
     try:
-        track['id'] = queries.create_track(**track)
-        response.headers['location'] = f'/tracks/{track["id"]}'
+        track_urls = playlist['tracks']
+        del playlist['tracks']
+        playlist['id'] = queries.create_playlist(**playlist)
+        num_tracks = 0
+        for url in track_urls:
+            num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], media_file_url=track_urls)
+        playlist['tracks'] = track_urls
+        response = jsonify(playlist)
+        response.headers['location'] = f'/playlists/{playlist["id"]}'
         response.status_code = 201
     except Exception as e:
         response.status_code = 409
     return response
 
-def delete_track(id):
-    # DELETE
+def delete_playlist(id):
     if not id:
         raise exceptions.ParseError()
     try:
-        queries.delete_track(id=id)
-        return { 'message': f'Deleted 1 track with id {id}' }, status.HTTP_200_OK
+        with queries.transaction():
+            queries.enable_foreign_keys()
+            queries.delete_playlist(id=id)
+        return { 'message': f'Deleted 1 playlist with id {id}' }, status.HTTP_200_OK
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_404_NOT_FOUND
-
-def update_track(id, track):
-    # PATCH
-    fields = ['title', 'album_title', 'time_len', 'url_media_file', 'url_album_chart']
-    for field in track.keys():
-        if field not in fields:
-            return { 'error': f'key {field} does not exist' }, status.HTTP_404_NOT_FOUND
-    updates = []
-    query = 'UPDATE tracks SET'
-    for key, value in track.items():
-        query += f' {key}=?,'
-        updates.append(value)
-    query = query[:-1] + ' WHERE id = ?;'
-    updates.append(id)
-    try:
-        queries._engine.execute(query, updates)
-    except Exception as e:
-        return { 'error': str(e) }, status.HTTP_404_NOT_FOUND
-    return get_track(id)
 
 if __name__ == "__main__":
     app.run()
