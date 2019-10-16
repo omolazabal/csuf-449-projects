@@ -1,3 +1,3 @@
 -- :name create_description :insert
-INSERT INTO descriptions(user_description)
-VALUES(:user_description);
+INSERT INTO descriptions(track_id, user_username, description)
+VALUES(:track_id, :user_username, :description);
