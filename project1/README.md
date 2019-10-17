@@ -1,5 +1,10 @@
 # CPSC 449 - Fall 2019 - Project 1
 
+## Names
+Oscar Olazabal
+Shivam Shah
+Kevin Chen 
+
 ## Dependencies
 This project depends on Foreman and all of the Python modules listed in `requirements.txt`. To install foreman and the modules and run:
 
