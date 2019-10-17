@@ -13,7 +13,7 @@ queries.connect(app.config['DATABASE_URL'])
 
 @app.cli.command('init')
 def init_db():
-    os.system('rm music.db')
+    os.system('rm -f music.db')
     with app.app_context():
         db = queries._engine.raw_connection()
         with app.open_resource('music.sql', mode='r') as f:
