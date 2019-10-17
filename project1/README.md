@@ -53,7 +53,7 @@ The executable creates, retrieves, updates, and deletes from the database using 
 ```
 
 ## Endpoints
-### Tracks `PORT 5002`
+### Tracks `PORT 5000`
 - `/tracks/<int:id>`
     - `GET` Retrieves a track given its ID
     - `DELETE` Deletes a track given its ID
