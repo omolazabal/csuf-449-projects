@@ -83,6 +83,8 @@ The executable creates, retrieves, updates, and deletes from the database using 
     - `DELETE` Deletes a user given their username
 - `/users`
     - `POST` Inserts a new user given their data in JSON format
+- `/users/authenticate`
+    - `GET` Validates a user and password given JSON data containing a username and password
 
 ### Descriptions `PORT 5003`
 - `/descriptions/<int:id>`
