@@ -15,18 +15,7 @@ CREATE TABLE users(
     UNIQUE(disp_name)
 );
 
-DROP TABLE IF EXISTS tracks;
-CREATE TABLE tracks (
-    id INTEGER PRIMARY KEY,
-    track_title VARCHAR NOT NULL,
-    album_title VARCHAR NOT NULL,
-    artist VARCHAR NOT NULL,
-    track_length FLOAT NOT NULL,
-    media_file_url TEXT NOT NULL,
-    album_art_url TEXT NULL,
-    UNIQUE(media_file_url),
-    UNIQUE(album_art_url)
-);
+
 
 DROP TABLE IF EXISTS playlists;
 CREATE TABLE playlists(
@@ -40,10 +29,11 @@ CREATE TABLE playlists(
 DROP TABLE IF EXISTS playlist_tracks;
 CREATE TABLE playlist_tracks(
     playlist_id INTEGER NOT NULL,
-    media_file_url TEXT NOT NULL,
-    FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE,
-    FOREIGN KEY(media_file_url) REFERENCES tracks(media_file_url) ON DELETE CASCADE,
-    PRIMARY KEY(playlist_id, media_file_url)
+    media_file_url TEXT NOT NULL
+    -- FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE,
+    -- FOREIGN KEY(media_file_url) REFERENCES tracks(media_file_url) ON DELETE CASCADE,
+    -- PRIMARY KEY(playlist_id)
+    
 );
 
 DROP TABLE IF EXISTS descriptions;
@@ -51,9 +41,9 @@ CREATE TABLE descriptions (
     track_id INTEGER NOT NULL,
     user_name VARCHAR NOT NULL,
     description TEXT NOT NULL,
-    FOREIGN KEY(track_id) REFERENCES tracks(id) ON DELETE CASCADE,
+    -- FOREIGN KEY(track_id) REFERENCES tracks(id) ON DELETE CASCADE,
     FOREIGN KEY(user_name) REFERENCES users(username) ON DELETE CASCADE,
-    PRIMARY KEY(track_id, user_name)
+    PRIMARY KEY(user_name)
 );
 
 COMMIT;

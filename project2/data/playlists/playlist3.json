@@ -1,0 +1,9 @@
+{
+    "title": "playlist3",
+    "creator": "username3",
+    "tracks" : [
+        "file:///home/student/Music/mediafile2",
+        "file:///home/student/Music/mediafile1"
+    ],
+    "description": "description3"
+}
