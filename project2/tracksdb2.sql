@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS tracks;
 CREATE TABLE tracks (
-    uuid BLOB PRIMARY KEY,
+    uuid GUID PRIMARY KEY,
     track_title VARCHAR NOT NULL,
     album_title VARCHAR NOT NULL,
     artist VARCHAR NOT NULL,

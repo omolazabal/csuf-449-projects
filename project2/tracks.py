@@ -26,8 +26,13 @@ sqlite3.register_converter('GUID', lambda b: uuid.UUID(bytes_le=b))
 sqlite3.register_adapter(uuid.UUID, lambda u: u.bytes_le)
 
 
-@app.route('/tracks/<int:id>', methods=['GET', 'DELETE', 'PATCH'])
+@app.route('/tracks/<uuid:id>', methods=['GET', 'DELETE', 'PATCH'])
 def track(id):
+    # with open ("debug.txt", 'a') as f:
+    #    f.write(" id val =" )
+    #    f.write(str(id))
+    #    f.write("\n")
+       #id = uuid.UUID(id)
     if request.method == 'GET':
         return get_track(id)
     elif request.method == 'DELETE':
@@ -43,11 +48,23 @@ def get_track(id):
     # GET
     import pprint
     pprint.pprint(id)
+    with open ("debug.txt", 'a') as f:
+       f.write("get id =" )
+       f.write(str(id))
+       f.write("\n")
+       
+       #id = int(id)
     if   id.int % 3 ==0:
+        # with open ("debug.txt", 'a') as f:
+        #     f.write("At db1\n" )
         track = queries2.track_by_id(id=id)
     elif id.int % 3 ==1:
+        # with open ("debug.txt", 'a') as f:
+        #     f.write("At db2\n" )
         track = queries3.track_by_id(id=id)
     elif id.int  % 3 == 2:
+        # with open ("debug.txt", 'a') as f:
+        #     f.write("At db3\n" )
         track = queries4.track_by_id(id=id)
     
     if track:
@@ -66,20 +83,37 @@ def insert_track(track):
             id = uuid.uuid4()
             track['id'] = id
             print(track['id'])
+            
             import pprint
             pprint.pprint(track)
             if id.int % 3 == 0:
                 queries2.create_track(**track)
+                # with open ("debug.txt", 'a') as f:
+                #     f.write("insert id val db1 =" )
+                #     f.write(track['id'])
+                #     f.write("\n")
             elif id.int%3 == 1:
                 queries3.create_track(**track)
+                # with open ("debug.txt", 'a') as f:
+                #     f.write("insert id val db2 =" )
+                #     f.write(str(track['id']))
+                #     f.write("\n")
             elif id.int %3 == 2:
                 queries4.create_track(**track)
+                # with open ("debug.txt", 'a') as f:
+                #     f.write("insert id val db3 =" )
+                #     f.write(str(track['id']))
+                #     f.write("\n")
             response = jsonify(track)
             response.headers['location'] = f'/tracks/{track["id"]}'
             response.status_code = 201
         except Exception as e:
             response = jsonify(error=str(e))
             response.status_code = 409
+    # with open ("debug.txt", 'a') as f:
+    #     f.write("insert id =" )
+    #     f.write(str(id))
+    #     f.write("\n")
     return response
 
 def delete_track(id):
@@ -87,11 +121,11 @@ def delete_track(id):
     if not id:
         raise exceptions.ParseError()
     try:
-        if id % 3 == 0:
+        if id.int % 3 == 0:
             queries2.delete_track(id=id)
-        elif id%3 == 1:
+        elif id.int%3 == 1:
             queries3.delete_track(id=id)
-        elif id%3 == 2:
+        elif id.int%3 == 2:
             queries4.delete_track(id=id)
         return { 'message': f'Deleted 1 track with id {id}' }, status.HTTP_200_OK
     except Exception as e:
@@ -114,11 +148,11 @@ def update_track(id, track):
     track['id'] = id
     updates.append(id)
     try:
-        if int(id)%3 ==0:
+        if id.int %3 ==0:
             queries2._engine.execute(query, updates)
-        elif int(id)%3 == 1:
+        elif id.int %3 == 1:
             queries3._engine.execute(query, updates)
-        elif int(id)%3 ==2:
+        elif id.int%3 ==2:
             queries4._engine.execute(query, updates)
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_404_NOT_FOUND

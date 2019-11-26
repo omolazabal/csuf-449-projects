@@ -1,6 +1,6 @@
-#!/bin/bash
+!/bin/bash
 
-# Tracks
+Tracks
 echo '\nNew tracks\n'
 curl --verbose \
      --header "Content-type: application/json" \
@@ -20,26 +20,26 @@ curl --verbose \
      --data @data/tracks/track3.json \
      http://localhost:5000/tracks
 
-# echo '\nUpdate track\n'
-# curl --verbose \
-#      --header "Content-type: application/json" \
-#      --request PATCH \
-#      --data @data/tracks/track_edit.json \
-#      http://localhost:5000/tracks/3
+echo '\nUpdate track\n'
+curl --verbose \
+     --header "Content-type: application/json" \
+     --request PATCH \
+     --data @data/tracks/track_edit.json \
+     http://localhost:5000/tracks/3
 
-# echo '\nGet track\n'
-# curl --verbose \
-#      --header "Content-type: application/json" \
-#      --request GET \
-#      http://localhost:5000/tracks/3
+echo '\nGet track\n'
+curl --verbose \
+     --header "Content-type: application/json" \
+     --request GET \
+     http://localhost:5000/tracks/3
 
-# echo '\nDelete track\n'
-# curl --verbose \
-#      --header "Content-type: application/json" \
-#      --request DELETE \
-#      http://localhost:5000/tracks/3
+echo '\nDelete track\n'
+curl --verbose \
+     --header "Content-type: application/json" \
+     --request DELETE \
+     http://localhost:5000/tracks/3
 
-# Users
+Users
 echo '\nCreate new users\n'
 curl --verbose \
      --header "Content-type: application/json" \
@@ -90,7 +90,7 @@ curl --verbose \
      --data @data/users/user1PasswordCheck.json \
      http://localhost:5002/users/authenticate
 
-# Playlists
+Playlists
 echo '\nNew playlists\n'
 curl --verbose \
      --header "Content-type: application/json" \
@@ -134,7 +134,7 @@ curl --verbose \
      --request DELETE \
      http://localhost:5001/playlists/3
 
-# Descriptions
+Descriptions
 curl --verbose \
      --header "Content-type: application/json" \
      --request POST \

@@ -24,14 +24,14 @@ def playlists():
     elif request.method == 'GET':
         return get_playlists(request.args)
 
-# @app.route('/playlists/all', methods=['GET'])
-# def all_playlists():
-#     all_playlists = list(queries.all_playlists())
-#     for index, playlist in enumerate(all_playlists):
-#         tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
-#         tracks = [track['media_file_url'] for track in tracks]
-#         all_playlists[index]['tracks'] = tracks
-#     return all_playlists, status.HTTP_200_OK
+@app.route('/playlists/all', methods=['GET'])
+def all_playlists():
+    all_playlists = list(queries.all_playlists())
+    for index, playlist in enumerate(all_playlists):
+        tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
+        tracks = [track['media_file_url'] for track in tracks]
+        all_playlists[index]['tracks'] = tracks
+    return all_playlists, status.HTTP_200_OK
 
 def get_playlists(query_parameters):
     creator = query_parameters.get('creator')
