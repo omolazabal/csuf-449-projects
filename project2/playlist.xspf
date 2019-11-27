@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playlist version="1" xmlns="http://xspf.org/ns/0/">
 
-    <title>{{ title }}</title>
+    <title>{{ playlist['title'] }}</title>
 
-    <creator>{{ creator }}</creator>
+    <creator>{{ playlist['creator'] }}</creator>
 
-    <info>{{ description }}</info>
+    <info>{{ playlist['description'] }}</info>
 
 	<trackList>
-	{% for url in urls %}
+	{% for track in tracks %}
 		<track>
-			<location>{{ url }}</location>
+			<location>{{ track['media_file_url'] }}</location>
+
+			<!-- artist or band name -->
+            <creator>{{ track['artist'] }}</creator>
+
+            <!-- album title -->
+            <album>{{ track['album_title'] }}</album>
+
+            <!-- name of the song -->
+            <title>{{ track['track_title'] }}</title>
+
+            <!-- comment on the song -->
+            <annotation>{{ track['description'] }}</annotation>
+
+            <!-- song length, in milliseconds -->
+            <duration>{{ track['track_length'] }}</duration>
+
+            <!-- album art -->
+            <image>{{ track['album_art_url'] }}</image>
+
 		</track>
 	{% endfor %}
 	</trackList>

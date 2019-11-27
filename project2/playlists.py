@@ -29,7 +29,8 @@ def all_playlists():
     all_playlists = list(queries.all_playlists())
     for index, playlist in enumerate(all_playlists):
         tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
-        tracks = [track['media_file_url'] for track in tracks]
+        # stores all the track_id
+        tracks = [track['track_id'] for track in tracks]
         all_playlists[index]['tracks'] = tracks
     return all_playlists, status.HTTP_200_OK
 
@@ -41,7 +42,7 @@ def get_playlists(query_parameters):
     if playlists:
         for index, playlist in enumerate(playlists):
             tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
-            tracks = [track['media_file_url'] for track in tracks]
+            tracks = [track['track_id'] for track in tracks]
             playlists[index]['tracks'] = tracks
         return playlists, status.HTTP_200_OK
     return { "error" : f"Playlist with creator {creator} not found" }, status.HTTP_404_NOT_FOUND
@@ -51,7 +52,7 @@ def get_playlist(id):
     playlist = queries.playlist_by_id(id=id)
     if playlist:
         tracks = list(queries.playlist_tracks_by_id(playlist_id=id))
-        tracks = [track['media_file_url'] for track in tracks]
+        tracks = [track['track_id'] for track in tracks]
         playlist['track'] = tracks
         return playlist, status.HTTP_200_OK
     return { "error" : f"Playlist with id {id} not found" }, status.HTTP_404_NOT_FOUND
