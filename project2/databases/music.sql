@@ -29,19 +29,14 @@ CREATE TABLE playlists(
 DROP TABLE IF EXISTS playlist_tracks;
 CREATE TABLE playlist_tracks(
     playlist_id INTEGER NOT NULL,
-    media_file_url TEXT NOT NULL
-    -- FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE,
-    -- FOREIGN KEY(media_file_url) REFERENCES tracks(media_file_url) ON DELETE CASCADE,
-    -- PRIMARY KEY(playlist_id)
-    
+    track_id GUID NOT NULL
 );
 
 DROP TABLE IF EXISTS descriptions;
 CREATE TABLE descriptions (
-    track_id INTEGER NOT NULL,
+    track_id GUID NOT NULL,
     user_name VARCHAR NOT NULL,
     description TEXT NOT NULL,
-    -- FOREIGN KEY(track_id) REFERENCES tracks(id) ON DELETE CASCADE,
     FOREIGN KEY(user_name) REFERENCES users(username) ON DELETE CASCADE,
     PRIMARY KEY(user_name)
 );
