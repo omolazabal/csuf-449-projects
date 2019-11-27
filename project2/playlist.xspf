@@ -11,13 +11,6 @@
 	{% for url in urls %}
 		<track>
 			<location>{{ url }}</location>
-
-			<creator></creator>
-			<album></album>
-			<title></title>
-			<annotation></annotation>
-			<duration></duration>
-			<image></image>
 		</track>
 	{% endfor %}
 	</trackList>
