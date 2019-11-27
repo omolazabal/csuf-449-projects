@@ -197,11 +197,11 @@ r = requests.post(
         'http://localhost:8000/playlists',
         data = {
             "title" : "playlist3",
-            "creator" : "username3",
+            "creator" : "username2",
             "tracks" : [
                 f"{track_ids[1]}"
             ]
-            "description" : "this is playlist3"
+            "description" : "this is playlist3 made by username2"
         }
 )
 pprint(r.content)
