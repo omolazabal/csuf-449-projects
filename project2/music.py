@@ -25,19 +25,19 @@ def init_db():
     os.system('rm -f tracksdb3.db')
     with app.app_context():
         db1 = queries2._engine.raw_connection()
-        with app.open_resource('tracksdb1.sql', mode='r') as f:
+        with app.open_resource('databases/tracksdb1.sql', mode='r') as f:
             db1.cursor().executescript(f.read())
         db1.commit()
         db2 = queries3._engine.raw_connection()
-        with app.open_resource('tracksdb2.sql', mode='r') as f:
+        with app.open_resource('databases/tracksdb2.sql', mode='r') as f:
             db2.cursor().executescript(f.read())
         db2.commit()
         db3 = queries4._engine.raw_connection()
-        with app.open_resource('tracksdb3.sql', mode='r') as f:
+        with app.open_resource('databases/tracksdb3.sql', mode='r') as f:
             db3.cursor().executescript(f.read())
         db3.commit()
         db4 = queries._engine.raw_connection()
-        with app.open_resource('music.sql', mode='r') as f:
+        with app.open_resource('databases/music.sql', mode='r') as f:
             db4.cursor().executescript(f.read())
         db4.commit()
     
