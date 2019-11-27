@@ -9,17 +9,14 @@ import sqlite3
 app = flask_api.FlaskAPI(__name__)
 app.config.from_envvar('APP_CONFIG')
 
-#queries = pugsql.module('queries/')
 
-#needd to create 3 mode modules here 
-queries2 = pugsql.module('queries2/')
-queries3 = pugsql.module('queries3/')
-queries4 = pugsql.module('queries4/')
-#queries.connect(app.config['DATABASE_URL'])
-queries2.connect(app.config['DATABASE_URL2'])
-queries3.connect(app.config['DATABASE_URL3'])
-queries4.connect(app.config['DATABASE_URL4'])
-
+queries = [
+    pugsql.module('queries/tracks1'),
+    pugsql.module('queries/tracks2'),
+    pugsql.module('queries/tracks3')
+]
+for i in range(len(queries)):
+    queries[i].connect(app.config[f'TRACKS{i+1}_DATABASE_URL'])
 
 
 sqlite3.register_converter('GUID', lambda b: uuid.UUID(bytes_le=b))
@@ -41,19 +38,7 @@ def tracks():
 
 def get_track(id):
     # GET
-    import pprint
-    pprint.pprint(id)
-    with open ("debug.txt", 'a') as f:
-       f.write("get id =" )
-       f.write(str(id))
-       f.write("\n")
-    if   id.int % 3 ==0:
-        track = queries2.track_by_id(id=id)
-    elif id.int % 3 ==1:
-        track = queries3.track_by_id(id=id)
-    elif id.int  % 3 == 2:
-        track = queries4.track_by_id(id=id)
-    
+    queries[id.int%len(queries)].track_by_id(id=id)
     if track:
         return track, status.HTTP_200_OK
     return { "error" : f"Track with id {id} not found" }, status.HTTP_404_NOT_FOUND
@@ -69,16 +54,7 @@ def insert_track(track):
         try:
             id = uuid.uuid4()
             track['id'] = id
-            print(track['id'])
-            
-            import pprint
-            pprint.pprint(track)
-            if id.int % 3 == 0:
-                queries2.create_track(**track)
-            elif id.int%3 == 1:
-                queries3.create_track(**track)
-            elif id.int %3 == 2:
-                queries4.create_track(**track)
+            queries[id.int%len(queries)].create_track(**track)
             response = jsonify(track)
             response.headers['location'] = f'/tracks/{track["id"]}'
             response.status_code = 201
@@ -92,12 +68,7 @@ def delete_track(id):
     if not id:
         raise exceptions.ParseError()
     try:
-        if id.int % 3 == 0:
-            queries2.delete_track(id=id)
-        elif id.int%3 == 1:
-            queries3.delete_track(id=id)
-        elif id.int%3 == 2:
-            queries4.delete_track(id=id)
+        queries[id.int%len(queries)].delete_track(id=id)
         return { 'message': f'Deleted 1 track with id {id}' }, status.HTTP_200_OK
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_404_NOT_FOUND
@@ -119,12 +90,7 @@ def update_track(id, track):
     track['id'] = id
     updates.append(id)
     try:
-        if id.int %3 ==0:
-            queries2._engine.execute(query, updates)
-        elif id.int %3 == 1:
-            queries3._engine.execute(query, updates)
-        elif id.int%3 ==2:
-            queries4._engine.execute(query, updates)
+        queries[id.int%len(queries)]._engine.execute(query, updates)
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_404_NOT_FOUND
     return get_track(id)

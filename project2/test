@@ -86,3 +86,77 @@ r = requests.get(
 )
 pprint(r.content)
 
+# TRACKS
+print()
+track_ids = []
+
+print('\nNEW TRACK')
+r = requests.post(
+        'http://localhost:8000/tracks',
+        data = {
+            "track_title": "bass",
+            "album_title": "rock",
+            "artist": "Flea",
+            "track_length": 2.1,
+            "media_file_url": "http://localhost:8000/media/bass.mp3",
+            "album_art_url": "https://picsum.photos/id/975/200/200"
+        }
+)
+pprint(r.json())
+track_ids.append(r.json()['id'])
+
+print('\nNEW TRACK')
+r = requests.post(
+        'http://localhost:8000/tracks',
+        data = {
+            "track_title": "electric guitar",
+            "album_title": "rock",
+            "artist": "Slash",
+            "track_length": 2.1,
+            "media_file_url": "http://localhost:8000/media/electric-guitar.mp3",
+            "album_art_url": "https://picsum.photos/id/876/200/200"
+        }
+)
+pprint(r.json())
+track_ids.append(r.json()['id'])
+
+print('\nNEW TRACK')
+r = requests.post(
+        'http://localhost:8000/tracks',
+        data = {
+            "track_title": "harp",
+            "album_title": "classy",
+            "artist": "Yoyoma",
+            "track_length": 2.1,
+            "media_file_url": "http://localhost:8000/media/harp.mp3",
+            "album_art_url": "https://picsum.photos/id/1062/200/200"
+        }
+)
+pprint(r.json())
+track_ids.append(r.json()['id'])
+
+print('\nUPDATE TRACK')
+print(f'http://localhost:8000/tracks/{track_ids[-1]}')
+
+r = requests.patch(
+        f'http://localhost:8000/tracks/{track_ids[-1]}',
+        data = {
+            "track_title": "violin",
+            "album_title": "classier",
+            "track_length": 3.1,
+            "media_file_url": "http://localhost:8000/media/violin.mp3",
+        }
+)
+pprint(r.content)
+
+print('\nGET TRACK')
+r = requests.get(
+        f'http://localhost:8000/tracks/{track_ids[-1]}',
+)
+pprint(r.json())
+
+print('\nDELETE TRACK')
+r = requests.delete(
+        f'http://localhost:8000/tracks/{track_ids[-1]}',
+)
+pprint(r.json())
