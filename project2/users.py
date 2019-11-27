@@ -7,8 +7,8 @@ import werkzeug
 app = flask_api.FlaskAPI(__name__)
 app.config.from_envvar('APP_CONFIG')
 
-queries = pugsql.module('queries/')
-queries.connect(app.config['DATABASE_URL'])
+queries = pugsql.module('queries/users')
+queries.connect(app.config['MUSIC_DATABASE_URL'])
 
 
 # endpoint for get user info, update password, delete user

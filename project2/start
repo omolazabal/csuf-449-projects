@@ -1,5 +1,5 @@
 #!/bin/bash
-FLASK_APP=music.py flask init
+FLASK_APP=init.py flask init
 foreman start -c tracks=3 &        # p 5000
 foreman start -c users=3 &         # p 5200
 foreman start -c playlists=3 &     # p 5100
