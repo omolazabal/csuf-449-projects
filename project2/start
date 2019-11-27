@@ -1,0 +1,6 @@
+#!/bin/bash
+FLASK_APP=music.py flask init
+foreman start -c tracks=3 &
+foreman start -c users=3 &
+foreman start -c playlists=3 &
+foreman start -c descriptions=3 &
