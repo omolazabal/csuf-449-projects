@@ -63,15 +63,15 @@ def insert_playlist(playlist):
     if not all([field in playlist for field in required_fields]):
         raise exceptions.ParseError()
     try:
-        track_urls = playlist['tracks']
+        track_ids = playlist['tracks']
         del playlist['tracks']
         playlist['id'] = queries.create_playlist(**playlist)
         num_tracks = 0
-        for url in track_urls:
+        for ids in track_ids:
             with queries.transaction():
                 queries.enable_foreign_keys()
-                num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], media_file_url=url)
-        playlist['tracks'] = track_urls
+                num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], track_id=ids)
+        playlist['tracks'] = track_ids
         response = jsonify(playlist)
         response.headers['location'] = f'/playlists/{playlist["id"]}'
         response.status_code = 201

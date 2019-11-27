@@ -1,0 +1,244 @@
+#! /bin/env python3
+
+import requests
+from pprint import pprint
+
+
+# USERS
+print("\nINSERTING NEW USER")
+r = requests.post(
+        'http://localhost:8000/users',
+        data = {
+            "username" : "username1",
+            "user_pass" : "peanuts",
+            "disp_name" : "iamuser1",
+            "email" : "user1@gmail.com",
+            "url_homepage" : "user1.com"
+        }
+)
+pprint(r.content)
+
+print("\nINSERTING NEW USER")
+r = requests.post(
+        'http://localhost:8000/users',
+        data = {
+            "username" : "username2",
+            "user_pass" : "tree",
+            "disp_name" : "iamuser2",
+            "email" : "user2@gmail.com",
+            "url_homepage" : "user2.com"
+        }
+)
+pprint(r.content)
+
+print("\nINSERTING NEW USER")
+r = requests.post(
+        'http://localhost:8000/users',
+        data = {
+            "username" : "username3",
+            "user_pass" : "apple",
+            "disp_name" : "iamuser3",
+            "email" : "user3@gmail.com",
+            "url_homepage" : 'user3.com'
+        }
+)
+pprint(r.content)
+
+print("\nGET USER")
+r = requests.get(
+        'http://localhost:8000/users/username1',
+)
+pprint(r.content)
+
+print("\nGET USER")
+r = requests.get(
+        'http://localhost:8000/users/username2',
+)
+pprint(r.content)
+
+print("\nGET USER")
+r = requests.get(
+        'http://localhost:8000/users/username3',
+)
+pprint(r.content)
+
+print("\nDELETE USER")
+r = requests.delete(
+        'http://localhost:8000/users/username3',
+)
+pprint(r.content)
+
+print("\nUPDATE USER PASSWORD")
+r = requests.patch(
+        'http://localhost:8000/users/username1',
+        data = {
+            "user_pass" : "bananafruit"
+        }
+)
+pprint(r.content)
+
+print("\nAUTHENTICATE USER")
+r = requests.get(
+        'http://localhost:8000/users/authenticate',
+        data = {
+            "username" : "username1",
+            "user_pass" : "bananafruit"
+        }
+)
+pprint(r.content)
+
+# TRACKS
+print()
+track_ids = []
+
+print('\nNEW TRACK')
+r = requests.post(
+        'http://localhost:8000/tracks',
+        data = {
+            "track_title": "bass",
+            "album_title": "rock",
+            "artist": "Flea",
+            "track_length": 2.1,
+            "media_file_url": "http://localhost:8000/media/bass.mp3",
+            "album_art_url": "https://picsum.photos/id/975/200/200"
+        }
+)
+pprint(r.json())
+track_ids.append(r.json()['id'])
+
+print('\nNEW TRACK')
+r = requests.post(
+        'http://localhost:8000/tracks',
+        data = {
+            "track_title": "electric guitar",
+            "album_title": "rock",
+            "artist": "Slash",
+            "track_length": 2.1,
+            "media_file_url": "http://localhost:8000/media/electric-guitar.mp3",
+            "album_art_url": "https://picsum.photos/id/876/200/200"
+        }
+)
+pprint(r.json())
+track_ids.append(r.json()['id'])
+
+print('\nNEW TRACK')
+r = requests.post(
+        'http://localhost:8000/tracks',
+        data = {
+            "track_title": "harp",
+            "album_title": "classy",
+            "artist": "Yoyoma",
+            "track_length": 2.1,
+            "media_file_url": "http://localhost:8000/media/harp.mp3",
+            "album_art_url": "https://picsum.photos/id/1062/200/200"
+        }
+)
+pprint(r.json())
+track_ids.append(r.json()['id'])
+
+print('\nUPDATE TRACK')
+print(f'http://localhost:8000/tracks/{track_ids[-1]}')
+
+r = requests.patch(
+        f'http://localhost:8000/tracks/{track_ids[-1]}',
+        data = {
+            "track_title": "violin",
+            "album_title": "classier",
+            "track_length": 3.1,
+            "media_file_url": "http://localhost:8000/media/violin.mp3",
+        }
+)
+pprint(r.content)
+
+print('\nGET TRACK')
+r = requests.get(
+        f'http://localhost:8000/tracks/{track_ids[-1]}',
+)
+pprint(r.json())
+
+print('\nDELETE TRACK')
+r = requests.delete(
+        f'http://localhost:8000/tracks/{track_ids[-1]}',
+)
+pprint(r.json())
+
+# PLAYLISTS
+print("\nINSERTING NEW PLAYLIST")
+r = requests.post(
+        'http://localhost:8000/playlists',
+        data = {
+            "title" : "playlist1",
+            "creator" : "username1",
+            "tracks" : [
+                f"{track_ids[0]}"
+            ]
+            "description" : "this is playlist1"
+        }
+)
+pprint(r.content)
+
+print("\nINSERTING NEW PLAYLIST")
+r = requests.post(
+        'http://localhost:8000/playlists',
+        data = {
+            "title" : "playlist2",
+            "creator" : "username2",
+            "tracks" : [
+                f"{track_ids[0]}",
+                f"{track_ids[1]}"
+            ]
+            "description" : "this is playlist2"
+        }
+)
+pprint(r.content)
+
+print("\nINSERTING NEW PLAYLIST")
+r = requests.post(
+        'http://localhost:8000/playlists',
+        data = {
+            "title" : "playlist3",
+            "creator" : "username3",
+            "tracks" : [
+                f"{track_ids[1]}"
+            ]
+            "description" : "this is playlist3"
+        }
+)
+pprint(r.content)
+
+print("\nGET ALL PLAYLISTS")
+r = requests.get(
+        'http://localhost:8000/playlists/all'
+)
+pprint(r.content)
+
+print("\nGET PLAYLIST")
+r = requests.get(
+        'http://localhost:8000/playlists/1'
+)
+pprint(r.content)
+
+print("\nGET PLAYLIST")
+r = requests.get(
+        'http://localhost:8000/playlists/2'
+)
+pprint(r.content)
+
+print("\nGET PLAYLIST")
+r = requests.get(
+        'http://localhost:8000/playlists/3'
+)
+pprint(r.content)
+
+print("\nGET PLAYLIST BY CREATOR")
+r = requests.get(
+        'http://localhost:8000/playlists?creator=username1'
+)
+pprint(r.content)
+
+print("\nDELETE PLAYLIST")
+r = requests.delete(
+        'http://localhost:8000/playlists/3'
+)
+pprint(r.content)
+
