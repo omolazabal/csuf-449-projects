@@ -2,4 +2,4 @@ tracks: FLASK_APP=tracks.py flask run --port 5000
 playlist: FLASK_APP=playlists.py flask run --port 5001
 users: FLASK_APP=users.py flask run --port 5002
 descriptions: FLASK_APP=descriptions.py flask run --port 5003
-xspf: FLASK_APP=xspf.py flask run --port 8000
+# xspf: FLASK_APP=xspf.py flask run --port 8000
