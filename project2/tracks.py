@@ -25,6 +25,7 @@ sqlite3.register_adapter(uuid.UUID, lambda u: u.bytes_le)
 
 @app.route('/tracks/<uuid:id>', methods=['GET', 'DELETE', 'PATCH'])
 def track(id):
+    print(id)
     if request.method == 'GET':
         return get_track(id)
     elif request.method == 'DELETE':
@@ -38,7 +39,7 @@ def tracks():
 
 def get_track(id):
     # GET
-    queries[id.int%len(queries)].track_by_id(id=id)
+    track = queries[id.int%len(queries)].track_by_id(id=id)
     if track:
         return track, status.HTTP_200_OK
     return { "error" : f"Track with id {id} not found" }, status.HTTP_404_NOT_FOUND
