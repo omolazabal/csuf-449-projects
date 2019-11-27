@@ -18,11 +18,14 @@ def playlist(id):
 	print(playlists.status_code)
 	if playlists.status_code == 200:
 		urls = playlists.json()['track']
+		creator = playlists.json()['creator']
+		title = playlists.json()['title']
+		description = playlists.json()['description']
 		print(playlists.json())
 		print(urls)
-		
+
 		# renders xspf template file
-		return render_template('playlist.xspf', urls=urls)
+		return render_template('playlist.xspf', urls=urls, creator=creator, title=title, description=description)
 	else:
 		return { "error" : f"Playlist with id {id} not found" }, status.HTTP_404_NOT_FOUND
 
