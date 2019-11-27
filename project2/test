@@ -1,1 +1,88 @@
 #! /bin/env python3
+
+import requests
+from pprint import pprint
+
+# USERS
+print("\nINSERTING NEW USER")
+r = requests.post(
+        'http://localhost:8000/users',
+        data = {
+            "username" : "username1",
+            "user_pass" : "peanuts",
+            "disp_name" : "iamuser1",
+            "email" : "user1@gmail.com",
+            "url_homepage" : "user1.com"
+        }
+)
+pprint(r.content)
+
+print("\nINSERTING NEW USER")
+r = requests.post(
+        'http://localhost:8000/users',
+        data = {
+            "username" : "username2",
+            "user_pass" : "tree",
+            "disp_name" : "iamuser2",
+            "email" : "user2@gmail.com",
+            "url_homepage" : "user2.com"
+        }
+)
+pprint(r.content)
+
+print("\nINSERTING NEW USER")
+r = requests.post(
+        'http://localhost:8000/users',
+        data = {
+            "username" : "username3",
+            "user_pass" : "apple",
+            "disp_name" : "iamuser3",
+            "email" : "user3@gmail.com",
+            "url_homepage" : 'user3.com'
+        }
+)
+pprint(r.content)
+
+print("\nGET USER")
+r = requests.get(
+        'http://localhost:8000/users/username1',
+)
+pprint(r.content)
+
+print("\nGET USER")
+r = requests.get(
+        'http://localhost:8000/users/username2',
+)
+pprint(r.content)
+
+print("\nGET USER")
+r = requests.get(
+        'http://localhost:8000/users/username3',
+)
+pprint(r.content)
+
+print("\nDELETE USER")
+r = requests.delete(
+        'http://localhost:8000/users/username3',
+)
+pprint(r.content)
+
+print("\nUPDATE USER PASSWORD")
+r = requests.patch(
+        'http://localhost:8000/users/username1',
+        data = {
+            "user_pass" : "bananafruit"
+        }
+)
+pprint(r.content)
+
+print("\nAUTHENTICATE USER")
+r = requests.get(
+        'http://localhost:8000/users/authenticate',
+        data = {
+            "username" : "username1",
+            "user_pass" : "bananafruit"
+        }
+)
+pprint(r.content)
+
