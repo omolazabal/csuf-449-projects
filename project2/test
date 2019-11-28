@@ -163,7 +163,7 @@ print('\nNEW DESCRIPTION')
 r = requests.post(
         f'http://localhost:8000/descriptions',
         data = {
-            "track_id": track_ids[0],
+            "id": track_ids[0],
             "user_name": "username1",
             "description": "this is a track description"
         }
@@ -174,7 +174,7 @@ print('\nNEW DESCRIPTION')
 r = requests.post(
         f'http://localhost:8000/descriptions',
         data = {
-            "track_id": track_ids[1],
+            "id": track_ids[1],
             "user_name": "username2",
             "description": "this is a track description again"
         }
