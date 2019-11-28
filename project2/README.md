@@ -33,7 +33,7 @@ ulimit -n 4096 && sudo kong start
 
 You can then proceed with the curl command in Step 4 of the Ubuntu Installation instructions to verify that Kong is running.
 
-For Minio, create a new directory to store the data for the server, and follow the directions on their website to start the MinIO server.  
+For Minio, create a new directory to store the data for the server, and follow the directions on their website to start the MinIO server. Be sure to start the server with the command `./minio server buckets/`   
 
 When the MinIO server starts, it will print an endpoint, access key, and secret key. Make a note of these values so that you can access the server later.  
 
