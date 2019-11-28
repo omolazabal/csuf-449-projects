@@ -12,7 +12,7 @@ queries.connect(app.config['MUSIC_DATABASE_URL'])
 
 @app.route('/descriptions/<uuid:id>', methods=['GET'])
 def description(id):
-	description = queries.description_by_track_id(track_id=id)
+	description = queries.description_by_track_id(id=id)
 	if description:
 		return description
 	else:
