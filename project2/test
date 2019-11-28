@@ -1,6 +1,7 @@
 #! /bin/env python3
 
 import requests
+import json
 from pprint import pprint
 
 # USERS
@@ -186,3 +187,84 @@ r = requests.get(
         f'http://localhost:8000/descriptions/{track_ids[0]}',
 )
 pprint(r.json())
+
+# PLAYLISTS
+print("\nINSERTING NEW PLAYLIST")
+r = requests.post(
+        'http://localhost:8000/playlists',
+        json = {
+            "title" : "playlist1",
+            "creator" : "username1",
+            "tracks" : [
+                track_ids[0]
+            ],
+            "description" : "this is playlist1"
+        }
+)
+pprint(r.json())
+
+print("\nINSERTING NEW PLAYLIST")
+r = requests.post(
+        'http://localhost:8000/playlists',
+        json = {
+            "title" : "playlist2",
+            "creator" : "username2",
+            "tracks" : [
+                track_ids[0],
+                track_ids[1]
+            ],
+            "description" : "this is playlist2"
+        }
+)
+pprint(r.json())
+
+print("\nINSERTING NEW PLAYLIST")
+r = requests.post(
+        'http://localhost:8000/playlists',
+        json = {
+            "title" : "playlist3",
+            "creator" : "username2",
+            "tracks" : [
+                track_ids[1]
+            ],
+            "description" : "this is playlist3 made by username2"
+        }
+)
+pprint(r.json())
+
+print("\nGET ALL PLAYLISTS")
+r = requests.get(
+        'http://localhost:8000/playlists/all'
+)
+pprint(r.json())
+
+print("\nGET PLAYLIST")
+r = requests.get(
+        'http://localhost:8000/playlists/1'
+)
+pprint(r.json())
+
+print("\nGET PLAYLIST")
+r = requests.get(
+        'http://localhost:8000/playlists/2'
+)
+pprint(r.json())
+
+print("\nGET PLAYLIST")
+r = requests.get(
+        'http://localhost:8000/playlists/3'
+)
+pprint(r.json())
+
+print("\nGET PLAYLIST BY CREATOR")
+r = requests.get(
+        'http://localhost:8000/playlists?creator=username1'
+)
+pprint(r.json())
+
+print("\nDELETE PLAYLIST")
+r = requests.delete(
+        'http://localhost:8000/playlists/3'
+)
+pprint(r.json())
+

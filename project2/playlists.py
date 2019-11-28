@@ -7,7 +7,7 @@ import pugsql
 app = flask_api.FlaskAPI(__name__)
 app.config.from_envvar('APP_CONFIG')
 
-queries = pugsql.module('queries/')
+queries = pugsql.module('queries/playlists')
 queries.connect(app.config['MUSIC_DATABASE_URL'])
 
 @app.route('/playlists/<int:id>', methods=['GET', 'DELETE'])
@@ -64,13 +64,15 @@ def insert_playlist(playlist):
         raise exceptions.ParseError()
     try:
         track_ids = playlist['tracks']
+        with open('file.txt', 'w') as f:
+            f.write(str(type(playlist['tracks'])))
+            for i in playlist['tracks']:
+                f.write('\n' + i)
         del playlist['tracks']
         playlist['id'] = queries.create_playlist(**playlist)
         num_tracks = 0
-        for ids in track_ids:
-            with queries.transaction():
-                queries.enable_foreign_keys()
-                num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], track_id=ids)
+        for id in track_ids:
+            num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], track_id=id)
         playlist['tracks'] = track_ids
         response = jsonify(playlist)
         response.headers['location'] = f'/playlists/{playlist["id"]}'
