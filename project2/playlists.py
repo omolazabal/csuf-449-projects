@@ -8,7 +8,7 @@ app = flask_api.FlaskAPI(__name__)
 app.config.from_envvar('APP_CONFIG')
 
 queries = pugsql.module('queries/')
-queries.connect(app.config['DATABASE_URL'])
+queries.connect(app.config['MUSIC_DATABASE_URL'])
 
 @app.route('/playlists/<int:id>', methods=['GET', 'DELETE'])
 def playlist(id):

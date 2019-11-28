@@ -6,13 +6,13 @@ import pugsql
 app = flask_api.FlaskAPI(__name__)
 app.config.from_envvar('APP_CONFIG')
 
-queries = pugsql.module('queries/')
-queries.connect(app.config['DATABASE_URL'])
+queries = pugsql.module('queries/descriptions')
+queries.connect(app.config['MUSIC_DATABASE_URL'])
 
 
-@app.route('/descriptions/<int:id>', methods=['GET'])
+@app.route('/descriptions/<uuid:id>', methods=['GET'])
 def description(id):
-	description = queries.description_by_track_id(id=id)
+	description = queries.description_by_track_id(track_id=id)
 	if description:
 		return description
 	else:

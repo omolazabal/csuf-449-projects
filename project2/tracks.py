@@ -25,7 +25,6 @@ sqlite3.register_adapter(uuid.UUID, lambda u: u.bytes_le)
 
 @app.route('/tracks/<uuid:id>', methods=['GET', 'DELETE', 'PATCH'])
 def track(id):
-    print(id)
     if request.method == 'GET':
         return get_track(id)
     elif request.method == 'DELETE':

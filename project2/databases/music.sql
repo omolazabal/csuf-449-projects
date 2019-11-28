@@ -34,11 +34,10 @@ CREATE TABLE playlist_tracks(
 
 DROP TABLE IF EXISTS descriptions;
 CREATE TABLE descriptions (
-    track_id GUID NOT NULL,
+    track_uuid GUID PRIMARY KEY,
     user_name VARCHAR NOT NULL,
     description TEXT NOT NULL,
-    FOREIGN KEY(user_name) REFERENCES users(username) ON DELETE CASCADE,
-    PRIMARY KEY(user_name)
+    FOREIGN KEY(user_name) REFERENCES users(username) ON DELETE CASCADE
 );
 
 COMMIT;

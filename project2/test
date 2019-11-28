@@ -136,8 +136,6 @@ pprint(r.json())
 track_ids.append(r.json()['id'])
 
 print('\nUPDATE TRACK')
-print(f'http://localhost:8000/tracks/{track_ids[-1]}')
-
 r = requests.patch(
         f'http://localhost:8000/tracks/{track_ids[-1]}',
         data = {
@@ -147,7 +145,7 @@ r = requests.patch(
             "media_file_url": "http://localhost:8000/media/violin.mp3",
         }
 )
-pprint(r.content)
+pprint(r.json())
 
 print('\nGET TRACK')
 r = requests.get(
@@ -158,5 +156,33 @@ pprint(r.json())
 print('\nDELETE TRACK')
 r = requests.delete(
         f'http://localhost:8000/tracks/{track_ids[-1]}',
+)
+pprint(r.json())
+
+print('\nNEW DESCRIPTION')
+r = requests.post(
+        f'http://localhost:8000/descriptions',
+        data = {
+            "track_id": track_ids[0],
+            "user_name": "username1",
+            "description": "this is a track description"
+        }
+)
+pprint(r.json())
+
+print('\nNEW DESCRIPTION')
+r = requests.post(
+        f'http://localhost:8000/descriptions',
+        data = {
+            "track_id": track_ids[1],
+            "user_name": "username2",
+            "description": "this is a track description again"
+        }
+)
+pprint(r.json())
+
+print('\nGET DESCRIPTION')
+r = requests.get(
+        f'http://localhost:8000/descriptions/{track_ids[0]}',
 )
 pprint(r.json())
