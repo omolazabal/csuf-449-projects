@@ -22,7 +22,7 @@
             <title>{{ track['track_title'] }}</title>
 
             <!-- comment on the song -->
-            <annotation>{{ track['description'] }}</annotation>
+            <annotation>{{ track['description']['description'] }}</annotation>
 
             <!-- song length, in milliseconds -->
             <duration>{{ track['track_length'] }}</duration>
