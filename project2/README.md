@@ -1,4 +1,4 @@
-# CPSC 449 - Fall 2019 - Project 1
+# CPSC 449 - Fall 2019 - Project 2
 
 ## Names
 Oscar Olazabal  
