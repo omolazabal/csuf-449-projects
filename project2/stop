@@ -19,3 +19,5 @@ fuser -k 5300/tcp
 fuser -k 5301/tcp
 fuser -k 5302/tcp
 fuser -k 5303/tcp
+
+fuser -k 5400/tcp
