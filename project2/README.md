@@ -280,7 +280,7 @@ DELETE PLAYLIST
 - `/playlists/all`
     - `GET` Retrieves all playlists
 
-### Users `PORT 5002`
+### Users `PORT 8000`
 - `/users/<username>`
     - `GET` Retrieves user's profile (does not include password) given their username
     - `PATCH` Updates a user's password, given an updated password in JSON format
