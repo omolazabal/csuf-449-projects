@@ -92,6 +92,10 @@ The executable creates, retrieves, updates, and deletes from the database using 
 - `/descriptions`
     - `POST` Inserts a user description of a track given a username, a track id, and a description
 
+### XSPF `PORT 80??`
+- `/playlist/<int:id>.xspf`
+    - `GET` Retrieves playlist given its ID and renders a XSPF of it's information
+
 ## Data Structure
 Below are sample JSONs of the entities.
 ### Tracks
