@@ -11,15 +11,22 @@ app.config.from_envvar('APP_CONFIG')
 # currently only gets the playlist with specific id
 @app.route('/playlist/<int:id>.xspf')
 def playlist(id):
+        #run memcached
+        client = base.Client(('localhost'),11211)
+        result = client.get(id)
+        if result is None:
+                
+
         # concatenate the string so that we can put a get request for the right id
-        getPlaylist = "http://localhost:8000/playlists/" + str(id)
-        # remove .json() and uncomment bottom block for alternate way if this doesn't work
-        playlists = requests.get(getPlaylist).json()
-        playlists2 = requests.get(getPlaylist)
+                getPlaylist = "http://localhost:8000/playlists/" + str(id)
+                # remove .json() and uncomment bottom block for alternate way if this doesn't work
+                playlists = requests.get(getPlaylist).json()
+                result = requests.get(getPlaylist)
+                client.set(id,result,60)
 
         # parses out the track section in the response
-        print(playlists2.status_code)
-        if playlists2.status_code == 200:
+        print(result.status_code)
+        if result.status_code == 200:
                 track_ids = playlists['track']
                 get_track = []
                 for track_id in track_ids:
