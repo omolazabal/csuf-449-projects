@@ -3,25 +3,12 @@ import flask_api
 from flask import request, jsonify
 from flask_api import status, exceptions
 import uuid
-import pugsql
-import sqlite3 
+from flask_cassandra import CassandraCluster
 
 app = flask_api.FlaskAPI(__name__)
+cassandra = CassandraCluster()
 app.config.from_envvar('APP_CONFIG')
-
-
-queries = [
-    pugsql.module('queries/tracks1'),
-    pugsql.module('queries/tracks2'),
-    pugsql.module('queries/tracks3')
-]
-for i in range(len(queries)):
-    queries[i].connect(app.config[f'TRACKS{i+1}_DATABASE_URL'])
-
-
-sqlite3.register_converter('GUID', lambda b: uuid.UUID(bytes_le=b))
-sqlite3.register_adapter(uuid.UUID, lambda u: u.bytes_le)
-
+app.config['CASSANDRA_NODES'] = app.config['MUSIC_DATABASE_URL']
 
 @app.route('/tracks/<uuid:id>', methods=['GET', 'DELETE', 'PATCH'])
 def track(id):
@@ -38,9 +25,16 @@ def tracks():
 
 def get_track(id):
     # GET
-    track = queries[id.int%len(queries)].track_by_id(id=id)
+    cql = (
+            "SELECT * FROM tracks "
+            "WHERE uuid=%s"
+            " ALLOW FILTERING"
+    )
+    session = cassandra.connect()
+    session.set_keyspace("music")
+    track = session.execute(cql, (id,))
     if track:
-        return track, status.HTTP_200_OK
+        return list(track), status.HTTP_200_OK
     return { "error" : f"Track with id {id} not found" }, status.HTTP_404_NOT_FOUND
 
 def insert_track(track):
@@ -54,7 +48,13 @@ def insert_track(track):
         try:
             id = uuid.uuid4()
             track['id'] = id
-            queries[id.int%len(queries)].create_track(**track)
+            cql = (
+                    "INSERT INTO tracks(uuid, title, album_title, artist, track_length, media_file_url, album_art_url)"
+                    "VALUES(%s, %s, %s, %s, %s,%s,%s)"
+            )
+            session = cassandra.connect()
+            session.set_keyspace("music")
+            session.execute(cql, (id, track['track_title'], track['album_title'], track['artist'], track['track_length'], track['media_file_url'], track['album_art_url']))
             response = jsonify(track)
             response.headers['location'] = f'/tracks/{track["id"]}'
             response.status_code = 201
@@ -68,7 +68,13 @@ def delete_track(id):
     if not id:
         raise exceptions.ParseError()
     try:
-        queries[id.int%len(queries)].delete_track(id=id)
+        cql = (
+                "DELETE FROM tracks "
+                "WHERE uuid=%s"
+        )
+        session = cassandra.connect()
+        session.set_keyspace("music")
+        session.execute(cql, (id,))
         return { 'message': f'Deleted 1 track with id {id}' }, status.HTTP_200_OK
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_404_NOT_FOUND
@@ -84,13 +90,15 @@ def update_track(id, track):
     updates = []
     query = 'UPDATE tracks SET'
     for key, value in track.items():
-        query += f' {key}=?,'
+        query += f' {key}=%s,'
         updates.append(value)
-    query = query[:-1] + ' WHERE uuid = ?;'
+    query = query[:-1] + ' WHERE uuid = %s;'
     track['id'] = id
     updates.append(id)
     try:
-        queries[id.int%len(queries)]._engine.execute(query, updates)
+        session = cassandra.connect()
+        session.set_keyspace("music")
+        session.execute(query, updates)
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_404_NOT_FOUND
     return get_track(id)

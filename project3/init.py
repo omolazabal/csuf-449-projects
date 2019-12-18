@@ -15,6 +15,7 @@ def init_db():
     drop_music_cql = "DROP KEYSPACE IF EXISTS music"
     drop_users_cql = "DROP TABLE IF EXISTS music.users"
     drop_tracks_cql = "DROP TABLE IF EXISTS music.tracks"
+    drop_playlists_cql = "DROP TABLE IF EXISTS music.playlists"
     create_keyspace_cql = (
         "CREATE KEYSPACE music"
         "  WITH REPLICATION = {"
@@ -24,16 +25,23 @@ def init_db():
     )
     create_users_cql = (
         "CREATE TABLE music.users("
-        "    uuid UUID PRIMARY KEY,"
-        "    username VARCHAR, "
+        "    uuid UUID,"
+        "    username VARCHAR PRIMARY KEY, "
         "    user_pass VARCHAR,"
         "    disp_name VARCHAR,"
         "    email VARCHAR,"
         "    url_homepage TEXT,"
-        "    playlists_uuids LIST<UUID>,"
-        "    playlist_descriptions MAP<UUID, TEXT>,"
-        "    playlist_title MAP<UUID, TEXT>,"
         ");"
+    )
+
+    create_playlists_cql = (
+        "CREATE TABLE music.playlists("
+        "    uuid UUID PRIMARY KEY,"
+        "    description TEXT,"
+        "    title  TEXT,"
+        '    creator VARCHAR,'
+        "    tracks LIST<UUID>,"
+        ');'
     )
 
     create_tracks_cql = (
@@ -45,20 +53,21 @@ def init_db():
         "    track_length FLOAT,"
         "    media_file_url TEXT,"
         "    album_art_url TEXT,"
-        "    playlists_uuids LIST<UUID>,"
         "    track_description TEXT,"
-        "    descriptor_uuid UUID"
+        "    descriptor VARCHAR"
         ");"
     )
 
     session = cassandra.connect()
     session.execute(drop_users_cql)
     session.execute(drop_tracks_cql)
+    session.execute(drop_playlists_cql)
     session.execute(drop_music_cql)
     session.execute(create_keyspace_cql)
     session.set_keyspace("music")
     session.execute(create_users_cql)
     session.execute(create_tracks_cql)
+    session.execute(create_playlists_cql)
 
 if __name__ == "__main__":
     app.run()

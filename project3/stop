@@ -1,25 +1,26 @@
 #!/bin/bash
 
 docker stop scylla
+docker rm -f scylla
 
-# fuser -k 5000/tcp
-# fuser -k 5001/tcp
-# fuser -k 5002/tcp
-# fuser -k 5003/tcp
+fuser -k 5000/tcp
+fuser -k 5001/tcp
+fuser -k 5002/tcp
+fuser -k 5003/tcp
 # 
-# fuser -k 5100/tcp
-# fuser -k 5101/tcp
-# fuser -k 5102/tcp
-# fuser -k 5103/tcp
+fuser -k 5100/tcp
+fuser -k 5101/tcp
+fuser -k 5102/tcp
+fuser -k 5103/tcp
 # 
-# fuser -k 5200/tcp
-# fuser -k 5201/tcp
-# fuser -k 5202/tcp
-# fuser -k 5203/tcp
+fuser -k 5200/tcp
+fuser -k 5201/tcp
+fuser -k 5202/tcp
+fuser -k 5203/tcp
 # 
-# fuser -k 5300/tcp
-# fuser -k 5301/tcp
-# fuser -k 5302/tcp
-# fuser -k 5303/tcp
+fuser -k 5300/tcp
+fuser -k 5301/tcp
+fuser -k 5302/tcp
+fuser -k 5303/tcp
 # 
-# fuser -k 5400/tcp
+fuser -k 5400/tcp

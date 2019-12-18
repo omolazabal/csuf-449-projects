@@ -2,15 +2,15 @@
 import flask_api
 from flask import request, jsonify
 from flask_api import status, exceptions
-import pugsql
+from flask_cassandra import CassandraCluster
+import uuid
 
 app = flask_api.FlaskAPI(__name__)
+cassandra = CassandraCluster()
 app.config.from_envvar('APP_CONFIG')
+app.config['CASSANDRA_NODES'] = app.config['MUSIC_DATABASE_URL']
 
-queries = pugsql.module('queries/playlists')
-queries.connect(app.config['MUSIC_DATABASE_URL'])
-
-@app.route('/playlists/<int:id>', methods=['GET', 'DELETE'])
+@app.route('/playlists/<uuid:id>', methods=['GET', 'DELETE'])
 def playlist(id):
     if request.method == 'GET':
         return get_playlist(id)
@@ -26,35 +26,42 @@ def playlists():
 
 @app.route('/playlists/all', methods=['GET'])
 def all_playlists():
-    all_playlists = list(queries.all_playlists())
-    for index, playlist in enumerate(all_playlists):
-        tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
-        # stores all the track_id
-        tracks = [track['track_id'] for track in tracks]
-        all_playlists[index]['tracks'] = tracks
-    return all_playlists, status.HTTP_200_OK
+    create_playlist_cql = (
+            "SELECT * FROM PLAYLISTS"
+    )
+    session = cassandra.connect()
+    session.set_keyspace("music")
+    all_playlists = session.execute(create_playlist_cql)
+    return list(all_playlists), status.HTTP_200_OK
 
 def get_playlists(query_parameters):
     creator = query_parameters.get('creator')
     if not creator:
         return { 'error': 'argument "creator" missing' }, status.HTTP_400_BAD_REQUEST
-    playlists = list(queries.playlist_by_creator(creator=creator))
-    if playlists:
-        for index, playlist in enumerate(playlists):
-            tracks = list(queries.playlist_tracks_by_id(playlist_id=playlist['id']))
-            tracks = [track['track_id'] for track in tracks]
-            playlists[index]['tracks'] = tracks
-        return playlists, status.HTTP_200_OK
+    create_playlist_cql = (
+            "SELECT * FROM PLAYLISTS "
+            "WHERE creator=%s"
+            " ALLOW FILTERING"
+    )
+    session = cassandra.connect()
+    session.set_keyspace("music")
+    all_playlists = session.execute(create_playlist_cql, (creator,))
+    if all_playlists:
+        return list(all_playlists), status.HTTP_200_OK
     return { "error" : f"Playlist with creator {creator} not found" }, status.HTTP_404_NOT_FOUND
         
 
 def get_playlist(id):
-    playlist = queries.playlist_by_id(id=id)
+    create_playlist_cql = (
+            "SELECT * FROM PLAYLISTS "
+            "WHERE uuid=%s"
+            " ALLOW FILTERING"
+    )
+    session = cassandra.connect()
+    session.set_keyspace("music")
+    playlist = session.execute(create_playlist_cql, (id,))
     if playlist:
-        tracks = list(queries.playlist_tracks_by_id(playlist_id=id))
-        tracks = [track['track_id'] for track in tracks]
-        playlist['track'] = tracks
-        return playlist, status.HTTP_200_OK
+        return list(playlist), status.HTTP_200_OK
     return { "error" : f"Playlist with id {id} not found" }, status.HTTP_404_NOT_FOUND
 
 def insert_playlist(playlist):
@@ -64,15 +71,28 @@ def insert_playlist(playlist):
         raise exceptions.ParseError()
     try:
         track_ids = playlist['tracks']
-        with open('file.txt', 'w') as f:
-            f.write(str(type(playlist['tracks'])))
-            for i in playlist['tracks']:
-                f.write('\n' + i)
         del playlist['tracks']
-        playlist['id'] = queries.create_playlist(**playlist)
+        uid = uuid.uuid4()
+        playlist['id'] = uid
+        create_playlist_cql = (
+                "INSERT INTO playlists(uuid, title, creator, description)"
+                "VALUES(%s, %s, %s, %s)"
+        )
+        session = cassandra.connect()
+        session.set_keyspace("music")
+        session.execute(create_playlist_cql, (playlist['id'], playlist['title'], playlist['creator'], playlist['description']))
+
         num_tracks = 0
         for id in track_ids:
-            num_tracks += queries.insert_playlist_tracks(playlist_id=playlist['id'], track_id=id)
+            num_tracks += 1
+            cql = (
+                    "UPDATE playlists "
+                    "SET tracks = tracks + [%s] "
+                    "WHERE uuid=%s"
+            )
+            session = cassandra.connect()
+            session.set_keyspace("music")
+            session.execute(cql, (uuid.UUID(id) ,playlist['id']))
         playlist['tracks'] = track_ids
         response = jsonify(playlist)
         response.headers['location'] = f'/playlists/{playlist["id"]}'
@@ -86,9 +106,13 @@ def delete_playlist(id):
     if not id:
         raise exceptions.ParseError()
     try:
-        with queries.transaction():
-            queries.enable_foreign_keys()
-            queries.delete_playlist(id=id)
+        create_playlist_cql = (
+                "DELETE FROM PLAYLISTS "
+                "WHERE uuid=%s"
+        )
+        session = cassandra.connect()
+        session.set_keyspace("music")
+        session.execute(create_playlist_cql, (id,))
         return { 'message': f'Deleted 1 playlist with id {id}' }, status.HTTP_200_OK
     except Exception as e:
         return { 'error': str(e) }, status.HTTP_404_NOT_FOUND
