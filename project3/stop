@@ -1,7 +1,6 @@
 #!/bin/bash
 
 docker stop scylla
-docker rm -f scylla && docker rmi scylladb/scylla
 
 # fuser -k 5000/tcp
 # fuser -k 5001/tcp
