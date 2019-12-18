@@ -50,7 +50,7 @@ def init_db():
         "    title VARCHAR,"
         "    album_title VARCHAR,"
         "    artist VARCHAR,"
-        "    track_length FLOAT,"
+        "    track_length VARCHAR,"
         "    media_file_url TEXT,"
         "    album_art_url TEXT,"
         "    track_description TEXT,"

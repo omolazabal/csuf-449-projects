@@ -16,7 +16,7 @@ r = requests.post(
             "url_homepage" : "user1.com"
         }
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nINSERTING NEW USER")
 r = requests.post(
@@ -29,7 +29,7 @@ r = requests.post(
             "url_homepage" : "user2.com"
         }
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nINSERTING NEW USER")
 r = requests.post(
@@ -42,31 +42,31 @@ r = requests.post(
             "url_homepage" : 'user3.com'
         }
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nGET USER")
 r = requests.get(
         'http://localhost:8000/users/username1',
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nGET USER")
 r = requests.get(
         'http://localhost:8000/users/username2',
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nGET USER")
 r = requests.get(
         'http://localhost:8000/users/username3',
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nDELETE USER")
 r = requests.delete(
         'http://localhost:8000/users/username3',
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nUPDATE USER PASSWORD")
 r = requests.patch(
@@ -75,7 +75,7 @@ r = requests.patch(
             "user_pass" : "bananafruit"
         }
 )
-pprint(r.content)
+pprint(r.json())
 
 print("\nAUTHENTICATE USER")
 r = requests.get(
@@ -85,7 +85,7 @@ r = requests.get(
             "user_pass" : "bananafruit"
         }
 )
-pprint(r.content)
+pprint(r.json())
 
 # TRACKS
 print()
@@ -189,6 +189,7 @@ r = requests.get(
 pprint(r.json())
 
 # PLAYLISTS
+playlist_ids = []
 print("\nINSERTING NEW PLAYLIST")
 r = requests.post(
         'http://localhost:8000/playlists',
@@ -202,6 +203,7 @@ r = requests.post(
         }
 )
 pprint(r.json())
+playlist_ids.append(r.json()['id'])
 
 print("\nINSERTING NEW PLAYLIST")
 r = requests.post(
@@ -217,6 +219,7 @@ r = requests.post(
         }
 )
 pprint(r.json())
+playlist_ids.append(r.json()['id'])
 
 print("\nINSERTING NEW PLAYLIST")
 r = requests.post(
@@ -231,6 +234,7 @@ r = requests.post(
         }
 )
 pprint(r.json())
+playlist_ids.append(r.json()['id'])
 
 print("\nGET ALL PLAYLISTS")
 r = requests.get(
@@ -240,19 +244,19 @@ pprint(r.json())
 
 print("\nGET PLAYLIST")
 r = requests.get(
-        'http://localhost:8000/playlists/1'
+        f'http://localhost:8000/playlists/{playlist_ids[0]}'
 )
 pprint(r.json())
 
 print("\nGET PLAYLIST")
 r = requests.get(
-        'http://localhost:8000/playlists/2'
+        f'http://localhost:8000/playlists/{playlist_ids[1]}'
 )
 pprint(r.json())
 
 print("\nGET PLAYLIST")
 r = requests.get(
-        'http://localhost:8000/playlists/3'
+        f'http://localhost:8000/playlists/{playlist_ids[2]}'
 )
 pprint(r.json())
 
@@ -264,7 +268,7 @@ pprint(r.json())
 
 print("\nDELETE PLAYLIST")
 r = requests.delete(
-        'http://localhost:8000/playlists/3'
+        f'http://localhost:8000/playlists/{playlist_ids[2]}'
 )
 pprint(r.json())
 
