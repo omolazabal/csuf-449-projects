@@ -6,6 +6,7 @@ from flask_cassandra import CassandraCluster
 import os
 
 app = flask_api.FlaskAPI(__name__)
+cassandra = CassandraCluster()
 app.config.from_envvar('APP_CONFIG')
 app.config['CASSANDRA_NODES'] = app.config['MUSIC_DATABASE_URL']
 
