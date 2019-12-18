@@ -1,6 +1,7 @@
 #!/bin/bash
 docker run --name scylla -d scylladb/scylla --smp 1 --memory 1G --overprovisioned 1 --developer-mode 1 --experimental 1
-sleep 5
+docker start scylla 
+sleep 30
 FLASK_APP=init.py flask init
 # foreman start -c tracks=3 &        # p 5000
 # foreman start -c users=3 &         # p 5200

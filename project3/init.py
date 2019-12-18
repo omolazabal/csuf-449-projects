@@ -12,17 +12,18 @@ app.config['CASSANDRA_NODES'] = app.config['MUSIC_DATABASE_URL']
 
 @app.cli.command('init')
 def init_db():
+    drop_music_cql = "DROP KEYSPACE IF EXISTS music"
+    drop_users_cql = "DROP TABLE IF EXISTS music.users"
+    drop_tracks_cql = "DROP TABLE IF EXISTS music.tracks"
     create_keyspace_cql = (
-        "DROP KEYSPACE IF EXISTS music"
         "CREATE KEYSPACE music"
-        "WITH REPLICATION = {"
-        "'class' : 'SimpleStrategy',"
-        "'replication_factor' : 1"
-        "};"
+        "  WITH REPLICATION = {"
+        "  'class' : 'SimpleStrategy',"
+        "  'replication_factor' : 1"
+        "  };"
     )
     create_users_cql = (
-        "DROP COLUMNFAMILY IF EXISTS users;"
-        "CREATE COLUMNFAMILY users("
+        "CREATE TABLE music.users("
         "    uuid UUID PRIMARY KEY,"
         "    username VARCHAR, "
         "    user_pass VARCHAR,"
@@ -36,7 +37,7 @@ def init_db():
     )
 
     create_tracks_cql = (
-        "DROP COLUMNFAMILY tracks("
+        "CREATE TABLE music.tracks("
         "    uuid UUID PRIMARY KEY,"
         "    title VARCHAR,"
         "    album_title VARCHAR,"
@@ -47,10 +48,13 @@ def init_db():
         "    playlists_uuids LIST<UUID>,"
         "    track_description TEXT,"
         "    descriptor_uuid UUID"
-        ")"
+        ");"
     )
 
     session = cassandra.connect()
+    session.execute(drop_users_cql)
+    session.execute(drop_tracks_cql)
+    session.execute(drop_music_cql)
     session.execute(create_keyspace_cql)
     session.set_keyspace("music")
     session.execute(create_users_cql)
