@@ -1,4 +1,4 @@
-# CPSC 449 - Fall 2019 - Project 2
+# CPSC 449 - Fall 2019 - Project 3
 
 ## Names
 Oscar Olazabal  
@@ -31,13 +31,29 @@ sudo kong migrations bootstrap
 ulimit -n 4096 && sudo kong start
 ```
 
+Configure Kong by running
+```
+sh kong.conf
+```
+
 You can then proceed with the curl command in Step 4 of the Ubuntu Installation instructions to verify that Kong is running.
 
 For Minio, create a new directory to store the data for the server, and follow the directions on their website to start the MinIO server. Be sure to start the server with the command `./minio server buckets/`   
 
 When the MinIO server starts, it will print an endpoint, access key, and secret key. Make a note of these values so that you can access the server later.  
 
-Use the information provided to log into the MinIO Browser and create a bucket named tracks. Edit the policy for this bucket to add the prefix * as Read Only. Upload some music files and verify that you can access them via URLs such as http://localhost:9000/tracks/music-file.mp3
+Use the information provided to log into the MinIO Browser and create a bucket named tracks. Edit the policy for this bucket to add the prefix * as Read Only. Upload some music files and verify that you can access them via URLs such as http://localhost:9000/tracks/music-file.mp3  
+
+Also install docker
+```
+sudo apt update
+sudo apt install --yes docker.io
+sudo usermod -aG docker $USER
+```
+And the memcache tools
+```
+sudo apt install --yes memcached libmemcached-tools
+```
 
 If you run into dependency errors, ensure all of the modules in `requirements.txt` are install properly. You may have to use `apt install` to install some.
 
@@ -60,204 +76,206 @@ The executable creates, retrieves, updates, and deletes from the database using 
 student@tuffix-vm:~/Desktop/csuf-449-projects/project2$ ./test
 
 INSERTING NEW USER
-18:28:00 users.2        | 127.0.0.1 - - [27/Nov/2019 18:28:00] "POST /users HTTP/1.1" 201 -(b'{"username": "username1", "user_pass": "pbkdf2:sha256:150000$cCiNZZMr$3d316c'
- 
-b'bc8e01db22f12ba80d120008e198966b1c2793d2e2a3ef7465e706bd19", "disp_name": "i'
- b'amuser1", "email": "user1@gmail.com", "url_homepage": "user1.com", "id": 1}')
+17:06:57 users.2        | 127.0.0.1 - - [18/Dec/2019 17:06:57] "POST /users HTTP/1.1" 201 -
+{'disp_name': 'iamuser1',
+ 'email': 'user1@gmail.com',
+ 'url_homepage': 'user1.com',
+ 'user_pass': 'pbkdf2:sha256:150000$WxZvh3dk$86f6e34d8c1ceab65d388ad7e6e59713589d0589785b5d7786aa75accd230774',
+ 'username': 'username1',
+ 'uuid': '4c8c604d-9887-4536-bccb-156ed1d06d3e'}
 
 INSERTING NEW USER
-18:28:01 users.2        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "POST /users HTTP/1.1" 201 -
-(b'{"username": "username2", "user_pass": "pbkdf2:sha256:150000$q7xsWoLr$a2c36c'
- b'6544275e782c360e006c5051cae9e709557140a6a56b96fb2eef7cb83e", "disp_name": "i'
- b'amuser2", "email": "user2@gmail.com", "url_homepage": "user2.com", "id": 2}')
+17:06:57 users.2        | 127.0.0.1 - - [18/Dec/2019 17:06:57] "POST /users HTTP/1.1" 201 -
+{'disp_name': 'iamuser2',
+ 'email': 'user2@gmail.com',
+ 'url_homepage': 'user2.com',
+ 'user_pass': 'pbkdf2:sha256:150000$bqQYh4IQ$9d93207726ea3e5a722e26e781a3d037bbd2faa481d47906c7c1a9757cb3c69c',
+ 'username': 'username2',
+ 'uuid': '1e0fa74a-a54a-4037-9b56-6ce5370b92d0'}
 
 INSERTING NEW USER
-18:28:01 users.2        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "POST /users HTTP/1.1" 201 -
-(b'{"username": "username3", "user_pass": "pbkdf2:sha256:150000$30LdGEKq$c7ebf1'
- b'a96b7c90649d653b493105204eacda221cf0491c51138135c0bf39e155", "disp_name": "i'
- b'amuser3", "email": "user3@gmail.com", "url_homepage": "user3.com", "id": 3}')
+17:06:57 users.3        | 127.0.0.1 - - [18/Dec/2019 17:06:57] "POST /users HTTP/1.1" 201 -
+{'disp_name': 'iamuser3',
+ 'email': 'user3@gmail.com',
+ 'url_homepage': 'user3.com',
+ 'user_pass': 'pbkdf2:sha256:150000$UhA4YyrP$c0b3d1835d1a77d6cf92cf63a543fedbed17dc7f9d86b326eb3299510aa3fc5c',
+ 'username': 'username3',
+ 'uuid': '40000803-61a0-4860-bc21-68e5ddc9b9a9'}
 
 GET USER
-18:28:01 users.1        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "GET /users/username1 HTTP/1.1" 200 -
-(b'{"username": "username1", "disp_name": "iamuser1", "email": "user1@gmail.com'
- b'", "url_homepage": "user1.com"}')
+17:06:57 users.2        | 127.0.0.1 - - [18/Dec/2019 17:06:57] "GET /users/username1 HTTP/1.1" 200 -
+['username1', 'iamuser1', 'user1@gmail.com', 'user1.com']
 
 GET USER
-18:28:01 users.1        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "GET /users/username2 HTTP/1.1" 200 -
-(b'{"username": "username2", "disp_name": "iamuser2", "email": "user2@gmail.com'
- b'", "url_homepage": "user2.com"}')
+17:06:57 users.2        | 127.0.0.1 - - [18/Dec/2019 17:06:57] "GET /users/username2 HTTP/1.1" 200 -
+['username2', 'iamuser2', 'user2@gmail.com', 'user2.com']
 
 GET USER
-18:28:01 users.1        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "GET /users/username3 HTTP/1.1" 200 -
-(b'{"username": "username3", "disp_name": "iamuser3", "email": "user3@gmail.com'
- b'", "url_homepage": "user3.com"}')
+17:06:57 users.3        | 127.0.0.1 - - [18/Dec/2019 17:06:57] "GET /users/username3 HTTP/1.1" 200 -
+['username3', 'iamuser3', 'user3@gmail.com', 'user3.com']
 
 DELETE USER
-18:28:01 users.1        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "DELETE /users/username3 HTTP/1.1" 200 -
-b'{"message": "Deleted 1 user with username username3"}'
+17:06:57 users.2        | 127.0.0.1 - - [18/Dec/2019 17:06:57] "DELETE /users/username3 HTTP/1.1" 200 -
+{'message': 'Deleted 1 user with username username3'}
 
 UPDATE USER PASSWORD
-18:28:01 users.2        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "PATCH /users/username1 HTTP/1.1" 200 -
-(b'{"username": "username1", "disp_name": "iamuser1", "email": "user1@gmail.com'
- b'", "url_homepage": "user1.com"}')
+17:06:58 users.3        | 127.0.0.1 - - [18/Dec/2019 17:06:58] "PATCH /users/username1 HTTP/1.1" 200 -
+['username1', 'iamuser1', 'user1@gmail.com', 'user1.com']
 
 AUTHENTICATE USER
-18:28:01 users.1        | 127.0.0.1 - - [27/Nov/2019 18:28:01] "GET /users/authenticate HTTP/1.1" 200 -
-b'{"result": true}'
+17:06:58 users.3        | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /users/authenticate HTTP/1.1" 200 -
+{'result': True}
 
 
 NEW TRACK
-18:28:01 tracks.3       | 127.0.0.1 - - [27/Nov/2019 18:28:01] "POST /tracks HTTP/1.1" 201 -
+17:06:58 tracks.2       | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /tracks HTTP/1.1" 201 -
 {'album_art_url': 'https://picsum.photos/id/975/200/200',
  'album_title': 'rock',
  'artist': 'Flea',
- 'id': '02754400-bccb-4e07-bf0c-527166a70ee8',
+ 'id': '6138f2b2-19df-4b6c-b0d2-c60700c9b078',
  'media_file_url': 'http://localhost:8000/media/bass.mp3',
  'track_length': '2.1',
  'track_title': 'bass'}
 
 NEW TRACK
-18:28:01 tracks.3       | 127.0.0.1 - - [27/Nov/2019 18:28:01] "POST /tracks HTTP/1.1" 201 -
+17:06:58 tracks.3       | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /tracks HTTP/1.1" 201 -
 {'album_art_url': 'https://picsum.photos/id/876/200/200',
  'album_title': 'rock',
  'artist': 'Slash',
- 'id': 'e017fec2-b32c-4f13-bc7c-3e38fd570f98',
+ 'id': '76b35ec7-cf18-41a0-9225-151d06360f5e',
  'media_file_url': 'http://localhost:8000/media/electric-guitar.mp3',
  'track_length': '2.1',
  'track_title': 'electric guitar'}
 
 NEW TRACK
-18:28:02 tracks.1       | 127.0.0.1 - - [27/Nov/2019 18:28:02] "POST /tracks HTTP/1.1" 201 -
+17:06:58 tracks.2       | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /tracks HTTP/1.1" 201 -
 {'album_art_url': 'https://picsum.photos/id/1062/200/200',
  'album_title': 'classy',
  'artist': 'Yoyoma',
- 'id': 'd24ee1a3-37f2-4ba1-bdf8-205e3471c3fc',
+ 'id': '8df5dde3-598f-422d-91e4-db9ba7f58c95',
  'media_file_url': 'http://localhost:8000/media/harp.mp3',
  'track_length': '2.1',
  'track_title': 'harp'}
 
 UPDATE TRACK
-18:28:02 tracks.3       | 127.0.0.1 - - [27/Nov/2019 18:28:02] "PATCH /tracks/d24ee1a3-37f2-4ba1-bdf8-205e3471c3fc HTTP/1.1" 200 -
-{'album_art_url': 'https://picsum.photos/id/1062/200/200',
- 'album_title': 'classier',
- 'artist': 'Yoyoma',
- 'media_file_url': 'http://localhost:8000/media/violin.mp3',
- 'track_length': 3.1,
- 'track_title': 'violin',
- 'uuid': 'd24ee1a3-37f2-4ba1-bdf8-205e3471c3fc'}
+17:06:58 tracks.2       | 127.0.0.1 - - [18/Dec/2019 17:06:58] "PATCH /tracks/8df5dde3-598f-422d-91e4-db9ba7f58c95 HTTP/1.1" 404 -
+{'error': 'Error from server: code=2200 [Invalid query] message="Unknown '
+          'identifier track_title"'}
 
 GET TRACK
-18:28:02 tracks.1       | 127.0.0.1 - - [27/Nov/2019 18:28:02] "GET /tracks/d24ee1a3-37f2-4ba1-bdf8-205e3471c3fc HTTP/1.1" 200 -
-{'album_art_url': 'https://picsum.photos/id/1062/200/200',
- 'album_title': 'classier',
- 'artist': 'Yoyoma',
- 'media_file_url': 'http://localhost:8000/media/violin.mp3',
- 'track_length': 3.1,
- 'track_title': 'violin',
- 'uuid': 'd24ee1a3-37f2-4ba1-bdf8-205e3471c3fc'}
+17:06:58 tracks.3       | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /tracks/8df5dde3-598f-422d-91e4-db9ba7f58c95 HTTP/1.1" 200 -
+[{'album_art_url': 'https://picsum.photos/id/1062/200/200',
+  'album_title': 'classy',
+  'artist': 'Yoyoma',
+  'descriptor': None,
+  'media_file_url': 'http://localhost:8000/media/harp.mp3',
+  'title': 'harp',
+  'track_description': None,
+  'track_length': '2.1',
+  'uuid': '8df5dde3-598f-422d-91e4-db9ba7f58c95'}]
 
 DELETE TRACK
-18:28:02 tracks.2       | 127.0.0.1 - - [27/Nov/2019 18:28:02] "DELETE /tracks/d24ee1a3-37f2-4ba1-bdf8-205e3471c3fc HTTP/1.1" 200 -
-{'message': 'Deleted 1 track with id d24ee1a3-37f2-4ba1-bdf8-205e3471c3fc'}
+17:06:58 tracks.1       | 127.0.0.1 - - [18/Dec/2019 17:06:58] "DELETE /tracks/8df5dde3-598f-422d-91e4-db9ba7f58c95 HTTP/1.1" 200 -
+{'message': 'Deleted 1 track with id 8df5dde3-598f-422d-91e4-db9ba7f58c95'}
 
 NEW DESCRIPTION
-18:28:02 descriptions.3 | 127.0.0.1 - - [27/Nov/2019 18:28:02] "POST /descriptions HTTP/1.1" 201 -
+17:06:58 descriptions.1 | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /descriptions HTTP/1.1" 201 -
 {'description': 'this is a track description',
- 'id': '02754400-bccb-4e07-bf0c-527166a70ee8',
+ 'id': '6138f2b2-19df-4b6c-b0d2-c60700c9b078',
  'user_name': 'username1'}
 
 NEW DESCRIPTION
-18:28:02 descriptions.3 | 127.0.0.1 - - [27/Nov/2019 18:28:02] "POST /descriptions HTTP/1.1" 201 -
+17:06:58 descriptions.2 | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /descriptions HTTP/1.1" 201 -
 {'description': 'this is a track description again',
- 'id': 'e017fec2-b32c-4f13-bc7c-3e38fd570f98',
+ 'id': '76b35ec7-cf18-41a0-9225-151d06360f5e',
  'user_name': 'username2'}
 
 GET DESCRIPTION
-18:28:02 descriptions.2 | 127.0.0.1 - - [27/Nov/2019 18:28:02] "GET /descriptions/02754400-bccb-4e07-bf0c-527166a70ee8 HTTP/1.1" 200 -
-{'description': 'this is a track description',
- 'id': '02754400-bccb-4e07-bf0c-527166a70ee8',
- 'user_name': 'username1'}
+17:06:58 descriptions.1 | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /descriptions/6138f2b2-19df-4b6c-b0d2-c60700c9b078 HTTP/1.1" 200 -
+[{'descriptor': 'username1',
+  'track_description': 'this is a track description',
+  'uuid': '6138f2b2-19df-4b6c-b0d2-c60700c9b078'}]
 
 INSERTING NEW PLAYLIST
-18:28:02 playlists.2    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "POST /playlists HTTP/1.1" 201 -
+17:06:58 playlists.3    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /playlists HTTP/1.1" 201 -
 {'creator': 'username1',
  'description': 'this is playlist1',
- 'id': 1,
+ 'id': '768dc0a2-b3c0-4150-8241-2db9212720ad',
  'title': 'playlist1',
- 'tracks': ['02754400-bccb-4e07-bf0c-527166a70ee8']}
+ 'tracks': ['6138f2b2-19df-4b6c-b0d2-c60700c9b078']}
 
 INSERTING NEW PLAYLIST
-18:28:02 playlists.3    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "POST /playlists HTTP/1.1" 201 -
+17:06:58 playlists.3    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /playlists HTTP/1.1" 201 -
 {'creator': 'username2',
  'description': 'this is playlist2',
- 'id': 2,
+ 'id': '76cb58d7-a429-4f6f-b91d-49f7085b7529',
  'title': 'playlist2',
- 'tracks': ['02754400-bccb-4e07-bf0c-527166a70ee8',
-            'e017fec2-b32c-4f13-bc7c-3e38fd570f98']}
+ 'tracks': ['6138f2b2-19df-4b6c-b0d2-c60700c9b078',
+            '76b35ec7-cf18-41a0-9225-151d06360f5e']}
 
 INSERTING NEW PLAYLIST
-18:28:02 playlists.3    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "POST /playlists HTTP/1.1" 201 -
+17:06:58 playlists.1    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "POST /playlists HTTP/1.1" 201 -
 {'creator': 'username2',
  'description': 'this is playlist3 made by username2',
- 'id': 3,
+ 'id': '8b9c0d4d-86a1-4e68-a194-47e908f1f8e7',
  'title': 'playlist3',
- 'tracks': ['e017fec2-b32c-4f13-bc7c-3e38fd570f98']}
+ 'tracks': ['76b35ec7-cf18-41a0-9225-151d06360f5e']}
 
 GET ALL PLAYLISTS
-18:28:02 playlists.3    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "GET /playlists/all HTTP/1.1" 200 -
-[{'creator': 'username1',
-  'description': 'this is playlist1',
-  'id': 1,
-  'title': 'playlist1',
-  'tracks': ['02754400-bccb-4e07-bf0c-527166a70ee8']},
- {'creator': 'username2',
+17:06:58 playlists.1    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /playlists/all HTTP/1.1" 200 -
+[{'creator': 'username2',
   'description': 'this is playlist2',
-  'id': 2,
   'title': 'playlist2',
-  'tracks': ['02754400-bccb-4e07-bf0c-527166a70ee8',
-             'e017fec2-b32c-4f13-bc7c-3e38fd570f98']},
+  'tracks': ['6138f2b2-19df-4b6c-b0d2-c60700c9b078',
+             '76b35ec7-cf18-41a0-9225-151d06360f5e'],
+  'uuid': '76cb58d7-a429-4f6f-b91d-49f7085b7529'},
+ {'creator': 'username1',
+  'description': 'this is playlist1',
+  'title': 'playlist1',
+  'tracks': ['6138f2b2-19df-4b6c-b0d2-c60700c9b078'],
+  'uuid': '768dc0a2-b3c0-4150-8241-2db9212720ad'},
  {'creator': 'username2',
   'description': 'this is playlist3 made by username2',
-  'id': 3,
   'title': 'playlist3',
-  'tracks': ['e017fec2-b32c-4f13-bc7c-3e38fd570f98']}]
+  'tracks': ['76b35ec7-cf18-41a0-9225-151d06360f5e'],
+  'uuid': '8b9c0d4d-86a1-4e68-a194-47e908f1f8e7'}]
 
 GET PLAYLIST
-18:28:02 playlists.2    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "GET /playlists/1 HTTP/1.1" 200 -
-{'creator': 'username1',
- 'description': 'this is playlist1',
- 'id': 1,
- 'title': 'playlist1',
- 'track': ['02754400-bccb-4e07-bf0c-527166a70ee8']}
-
-GET PLAYLIST
-18:28:02 playlists.3    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "GET /playlists/2 HTTP/1.1" 200 -
-{'creator': 'username2',
- 'description': 'this is playlist2',
- 'id': 2,
- 'title': 'playlist2',
- 'track': ['02754400-bccb-4e07-bf0c-527166a70ee8',
-           'e017fec2-b32c-4f13-bc7c-3e38fd570f98']}
-
-GET PLAYLIST
-18:28:02 playlists.2    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "GET /playlists/3 HTTP/1.1" 200 -
-{'creator': 'username2',
- 'description': 'this is playlist3 made by username2',
- 'id': 3,
- 'title': 'playlist3',
- 'track': ['e017fec2-b32c-4f13-bc7c-3e38fd570f98']}
-
-GET PLAYLIST BY CREATOR
-18:28:02 playlists.3    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "GET /playlists?creator=username1 HTTP/1.1" 200 -
+17:06:58 playlists.1    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /playlists/768dc0a2-b3c0-4150-8241-2db9212720ad HTTP/1.1" 200 -
 [{'creator': 'username1',
   'description': 'this is playlist1',
-  'id': 1,
   'title': 'playlist1',
-  'tracks': ['02754400-bccb-4e07-bf0c-527166a70ee8']}]
+  'tracks': ['6138f2b2-19df-4b6c-b0d2-c60700c9b078'],
+  'uuid': '768dc0a2-b3c0-4150-8241-2db9212720ad'}]
+
+GET PLAYLIST
+17:06:58 playlists.3    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /playlists/76cb58d7-a429-4f6f-b91d-49f7085b7529 HTTP/1.1" 200 -
+[{'creator': 'username2',
+  'description': 'this is playlist2',
+  'title': 'playlist2',
+  'tracks': ['6138f2b2-19df-4b6c-b0d2-c60700c9b078',
+             '76b35ec7-cf18-41a0-9225-151d06360f5e'],
+  'uuid': '76cb58d7-a429-4f6f-b91d-49f7085b7529'}]
+
+GET PLAYLIST
+17:06:58 playlists.2    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /playlists/8b9c0d4d-86a1-4e68-a194-47e908f1f8e7 HTTP/1.1" 200 -
+[{'creator': 'username2',
+  'description': 'this is playlist3 made by username2',
+  'title': 'playlist3',
+  'tracks': ['76b35ec7-cf18-41a0-9225-151d06360f5e'],
+  'uuid': '8b9c0d4d-86a1-4e68-a194-47e908f1f8e7'}]
+
+GET PLAYLIST BY CREATOR
+17:06:58 playlists.1    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "GET /playlists?creator=username1 HTTP/1.1" 200 -
+[{'creator': 'username1',
+  'description': 'this is playlist1',
+  'title': 'playlist1',
+  'tracks': ['6138f2b2-19df-4b6c-b0d2-c60700c9b078'],
+  'uuid': '768dc0a2-b3c0-4150-8241-2db9212720ad'}]
 
 DELETE PLAYLIST
-18:28:02 playlists.2    | 127.0.0.1 - - [27/Nov/2019 18:28:02] "DELETE /playlists/3 HTTP/1.1" 200 -
-{'message': 'Deleted 1 playlist with id 3'}
+17:06:58 playlists.1    | 127.0.0.1 - - [18/Dec/2019 17:06:58] "DELETE /playlists/8b9c0d4d-86a1-4e68-a194-47e908f1f8e7 HTTP/1.1" 200 -
+{'message': 'Deleted 1 playlist with id 8b9c0d4d-86a1-4e68-a194-47e908f1f8e7'}
 
 ```
 
